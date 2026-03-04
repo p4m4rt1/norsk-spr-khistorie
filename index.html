@@ -6,232 +6,167 @@
 <title>Norsk Språkhistorie</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --ink: #1a0f00;
-    --parchment: #f5e8c8;
-    --aged: #c8a96e;
-    --rust: #8b3a1a;
-    --forest: #2d4a2d;
-    --gold: #c9962a;
-  }
+  :root { --ink:#1a0f00; --parchment:#f5e8c8; --aged:#c8a96e; --rust:#8b3a1a; --forest:#2d4a2d; --gold:#c9962a; }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--ink);font-family:'EB Garamond',serif;overflow-x:hidden;min-height:100vh;}
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  /* GLOSSARY TERMS */
+  .g{color:#e8c878;border-bottom:1px dashed rgba(232,200,120,0.5);cursor:pointer;transition:color .2s,border-color .2s;position:relative;white-space:nowrap;}
+  .g:hover,.g.active{color:#ffd966;border-color:#ffd966;}
 
-  body {
-    background: var(--ink);
-    font-family: 'EB Garamond', serif;
-    overflow-x: hidden;
-    min-height: 100vh;
-  }
+  /* GLOSSARY POPUP */
+  #gloss-popup{display:none;position:fixed;z-index:9999;max-width:300px;background:linear-gradient(135deg,#1e1204,#140c02);border:1px solid rgba(201,150,42,.5);border-radius:8px;padding:16px 18px 14px;box-shadow:0 8px 40px rgba(0,0,0,.8);pointer-events:none;animation:popIn .18s cubic-bezier(.34,1.56,.64,1) both;}
+  #gloss-popup.visible{display:block;}
+  #gloss-popup::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--gold),transparent);opacity:.6;border-radius:8px 8px 0 0;}
+  .gloss-term{font-family:'Cinzel',serif;font-size:.78rem;font-weight:700;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:7px;}
+  .gloss-def{font-size:.92rem;color:#d4b882;line-height:1.6;}
+  .gloss-def strong{color:var(--parchment);}
+  .gloss-arrow{position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-top:8px solid rgba(201,150,42,.5);}
+  .gloss-arrow-inner{position:absolute;bottom:-7px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:7px solid #1a0e04;}
+  @keyframes popIn{from{opacity:0;transform:scale(.88) translateY(4px)}to{opacity:1;transform:scale(1) translateY(0)}}
 
-  .container { max-width: 900px; margin: 0 auto; padding: 40px 20px 80px; }
+  /* LAYOUT */
+  .container{max-width:900px;margin:0 auto;padding:40px 20px 80px;}
+  .header{text-align:center;margin-bottom:60px;animation:fadeIn 1.2s ease both;}
+  .header h1{font-family:'Cinzel',serif;font-size:clamp(2rem,6vw,3.8rem);font-weight:900;color:var(--aged);letter-spacing:.05em;line-height:1.1;text-shadow:0 2px 20px rgba(201,150,42,.3);}
+  .header .subtitle{font-style:italic;font-size:1.2rem;color:#a89060;margin-top:10px;letter-spacing:.15em;}
+  .ornament{color:var(--gold);font-size:1.8rem;margin:12px 0;letter-spacing:.3em;}
+  .hints{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-top:20px;animation:fadeIn 2s ease both;}
+  .hint{display:inline-flex;align-items:center;gap:8px;font-size:.85rem;font-style:italic;color:#7a6040;border:1px solid rgba(201,150,42,.15);border-radius:20px;padding:6px 16px;}
 
-  /* ── HEADER ── */
-  .header { text-align: center; margin-bottom: 60px; animation: fadeIn 1.2s ease both; }
-  .header h1 {
-    font-family: 'Cinzel', serif;
-    font-size: clamp(2rem, 6vw, 3.8rem); font-weight: 900;
-    color: var(--aged); letter-spacing: 0.05em; line-height: 1.1;
-    text-shadow: 0 2px 20px rgba(201,150,42,0.3);
-  }
-  .header .subtitle { font-style: italic; font-size: 1.2rem; color: #a89060; margin-top: 10px; letter-spacing: 0.15em; }
-  .ornament { color: var(--gold); font-size: 1.8rem; margin: 12px 0; letter-spacing: 0.3em; }
+  /* TIMELINE */
+  .timeline{position:relative;}
+  .timeline::before{content:'';position:absolute;left:50%;transform:translateX(-50%);top:0;bottom:0;width:3px;background:linear-gradient(to bottom,transparent,var(--aged) 8%,var(--aged) 92%,transparent);}
+  .era{display:grid;grid-template-columns:1fr 60px 1fr;margin-bottom:10px;position:relative;opacity:0;transform:translateY(30px);animation:slideUp .7s ease forwards;}
+  .era:nth-child(1){animation-delay:.2s}.era:nth-child(2){animation-delay:.4s}.era:nth-child(3){animation-delay:.6s}.era:nth-child(4){animation-delay:.8s}.era:nth-child(5){animation-delay:1s}.era:nth-child(6){animation-delay:1.2s}.era:nth-child(7){animation-delay:1.4s}.era:nth-child(8){animation-delay:1.6s}
+  .era-left{padding:24px 30px 24px 0;text-align:right;}
+  .era-right{padding:24px 0 24px 30px;text-align:left;}
+  .era-center{display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;z-index:2;}
+  .era-dot{width:18px;height:18px;border-radius:50%;border:3px solid var(--aged);background:var(--ink);transition:transform .3s,background .3s,box-shadow .3s;position:relative;}
+  .era-dot::after{content:'';position:absolute;inset:-6px;border-radius:50%;border:1px solid rgba(201,150,42,.2);}
+  .era:hover .era-dot{transform:scale(1.4);background:var(--gold);box-shadow:0 0 16px rgba(201,150,42,.6);}
 
-  .hints { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-top: 18px; animation: fadeIn 2s ease both; }
-  .hint {
-    display: inline-flex; align-items: center; gap: 7px;
-    font-size: 0.84rem; font-style: italic; color: #7a6040;
-    border: 1px solid rgba(201,150,42,0.15); border-radius: 20px; padding: 5px 16px;
-  }
-  .hint-swatch { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  /* CARD */
+  .card{background:rgba(245,232,200,.05);border:1px solid rgba(201,150,42,.15);border-radius:6px;padding:20px 20px 32px;cursor:pointer;transition:background .25s,border-color .25s,transform .25s,box-shadow .25s;position:relative;}
+  .card::after{content:'▸ Les mer';position:absolute;bottom:10px;right:14px;font-size:.72rem;font-style:italic;color:rgba(201,150,42,.4);letter-spacing:.05em;transition:color .2s;}
+  .card:hover{background:rgba(245,232,200,.1);border-color:rgba(201,150,42,.4);transform:translateY(-2px);box-shadow:0 6px 24px rgba(0,0,0,.4);}
+  .card:hover::after{color:rgba(201,150,42,.85);}
+  .card.active{background:rgba(245,232,200,.12);border-color:rgba(201,150,42,.55);box-shadow:0 0 0 2px rgba(201,150,42,.2),0 8px 30px rgba(0,0,0,.5);}
+  .card.active::after{content:'✕ Lukk';color:rgba(201,150,42,.7);}
+  .era-year{font-family:'Cinzel',serif;font-size:.78rem;font-weight:700;color:var(--gold);letter-spacing:.1em;margin-bottom:6px;}
+  .era-title{font-family:'Cinzel',serif;font-size:1.05rem;font-weight:700;color:var(--parchment);margin-bottom:8px;line-height:1.2;}
+  .era-desc{font-size:.93rem;color:#c0a878;line-height:1.6;}
+  .era-quote{display:inline-block;margin-top:10px;font-style:italic;font-size:.88rem;color:var(--aged);border-left:2px solid var(--rust);padding-left:10px;opacity:.85;}
 
-  /* ── TIMELINE ── */
-  .timeline { position: relative; }
-  .timeline::before {
-    content: ''; position: absolute; left: 50%; transform: translateX(-50%);
-    top: 0; bottom: 0; width: 3px;
-    background: linear-gradient(to bottom, transparent, var(--aged) 8%, var(--aged) 92%, transparent);
-  }
+  /* EXPAND */
+  .expand-panel{display:none;grid-column:1/-1;margin:0 0 18px;animation:expandIn .4s cubic-bezier(.22,1,.36,1) both;}
+  .expand-panel.open{display:block;}
+  .expand-inner{background:linear-gradient(135deg,rgba(30,18,4,.97),rgba(20,12,2,.99));border:1px solid rgba(201,150,42,.3);border-radius:8px;padding:36px 42px;position:relative;overflow:hidden;}
+  .expand-inner::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(to right,transparent,var(--gold),transparent);opacity:.5;}
+  .expand-columns{display:grid;grid-template-columns:1fr 1fr;gap:32px;}
+  .expand-section{margin-bottom:22px;}
+  .expand-section:last-child{margin-bottom:0;}
+  .expand-label{font-family:'Cinzel',serif;font-size:.7rem;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);opacity:.7;margin-bottom:8px;}
+  .expand-text{font-size:1rem;color:#d4b882;line-height:1.75;}
+  .expand-text strong{color:var(--parchment);font-weight:600;}
+  .expand-big-quote{grid-column:1/-1;text-align:center;font-family:'EB Garamond',serif;font-style:italic;font-size:1.3rem;color:var(--aged);line-height:1.6;padding:24px 20px;border-top:1px solid rgba(201,150,42,.15);border-bottom:1px solid rgba(201,150,42,.15);margin:20px 0;}
+  .expand-big-quote::before{content:'\201C';font-size:3rem;line-height:0;vertical-align:-.5em;color:var(--rust);margin-right:6px;opacity:.6;}
+  .expand-big-quote::after{content:'\201D';font-size:3rem;line-height:0;vertical-align:-.5em;color:var(--rust);margin-left:6px;opacity:.6;}
+  .expand-facts{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:12px;}
+  .fact-pill{font-size:.82rem;color:#c0a060;border:1px solid rgba(201,150,42,.2);border-radius:20px;padding:5px 14px;background:rgba(201,150,42,.05);}
 
-  .era {
-    display: grid; grid-template-columns: 1fr 60px 1fr;
-    margin-bottom: 10px; position: relative;
-    opacity: 0; transform: translateY(30px);
-    animation: slideUp 0.7s ease forwards;
-  }
-  .era:nth-child(1){animation-delay:.2s} .era:nth-child(2){animation-delay:.4s}
-  .era:nth-child(3){animation-delay:.6s} .era:nth-child(4){animation-delay:.8s}
-  .era:nth-child(5){animation-delay:1s}  .era:nth-child(6){animation-delay:1.2s}
-  .era:nth-child(7){animation-delay:1.4s}.era:nth-child(8){animation-delay:1.6s}
+  /* ERA COLOURS */
+  .era-viking .era-dot{border-color:#7a4f2a;background:#1a0a00;}.era-viking .era-title{color:#e8c090;}.era-viking .era-year{color:#c07030;}
+  .era-old .era-dot{border-color:#5a6a4a;}.era-old .era-year{color:#90b060;}
+  .era-middle .era-dot{border-color:#4a5a7a;}.era-middle .era-year{color:#7090c0;}
+  .era-reform .era-dot{border-color:#8a5a2a;}.era-reform .era-year{color:#c09050;}
+  .era-danish .era-dot{border-color:#6a3a3a;}.era-danish .era-year{color:#c06060;}
+  .era-1814 .era-dot{border-color:var(--forest);background:#0a1a0a;}.era-1814 .era-year{color:#70b070;}.era-1814 .era-title{color:#a0e0a0;}
+  .era-modern .era-dot{border-color:var(--gold);background:#1a1000;box-shadow:0 0 8px rgba(201,150,42,.3);}.era-modern .era-year{color:var(--gold);}
 
-  .era-left  { padding: 24px 30px 24px 0; text-align: right; }
-  .era-right { padding: 24px 0 24px 30px; text-align: left; }
-  .era-center {
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    position: relative; z-index: 2;
-  }
-  .era-dot {
-    width: 18px; height: 18px; border-radius: 50%;
-    border: 3px solid var(--aged); background: var(--ink);
-    transition: transform .3s, background .3s, box-shadow .3s; position: relative;
-  }
-  .era-dot::after { content: ''; position: absolute; inset: -6px; border-radius: 50%; border: 1px solid rgba(201,150,42,.2); }
+  /* RUNE + LEGEND */
+  .rune-strip{text-align:center;margin:40px 0;color:rgba(201,150,42,.22);font-size:1.6rem;letter-spacing:.4em;animation:fadeIn 2s ease both;animation-delay:2s;}
+  .legend{margin-top:60px;border-top:1px solid rgba(201,150,42,.2);padding-top:40px;text-align:center;opacity:0;animation:fadeIn .8s ease forwards;animation-delay:2.2s;}
+  .legend h3{font-family:'Cinzel',serif;font-size:.9rem;color:var(--aged);letter-spacing:.2em;text-transform:uppercase;margin-bottom:20px;}
+  .legend-items{display:flex;justify-content:center;flex-wrap:wrap;gap:24px;}
+  .legend-item{display:flex;align-items:center;gap:8px;font-size:.85rem;color:#a89060;}
+  .legend-dot{width:10px;height:10px;border-radius:50%;border:2px solid;flex-shrink:0;}
 
-  /* ── CARD ── */
-  .card {
-    background: rgba(245,232,200,.05); border: 1px solid rgba(201,150,42,.15);
-    border-radius: 6px; padding: 20px; cursor: pointer;
-    transition: background .25s, border-color .25s, transform .25s, box-shadow .25s;
-    position: relative; user-select: none;
-  }
-  .card::after {
-    content: '▸ Les mer'; position: absolute; bottom: 12px; right: 14px;
-    font-size: .72rem; font-style: italic; color: rgba(201,150,42,.45); letter-spacing: .05em; transition: color .2s;
-  }
-  .card:hover { background: rgba(245,232,200,.1); border-color: rgba(201,150,42,.4); transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,0,0,.4); }
-  .card:hover::after { color: rgba(201,150,42,.9); }
-  .era:hover .era-dot { transform: scale(1.4); background: var(--gold); box-shadow: 0 0 16px rgba(201,150,42,.6); }
-  .card.active { background: rgba(245,232,200,.12); border-color: rgba(201,150,42,.55); box-shadow: 0 0 0 2px rgba(201,150,42,.2), 0 8px 30px rgba(0,0,0,.5); }
-  .card.active::after { content: '✕ Lukk'; color: rgba(201,150,42,.7); }
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  @keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes expandIn{from{opacity:0;transform:scaleY(.85);transform-origin:top}to{opacity:1;transform:scaleY(1);transform-origin:top}}
 
-  .era-year  { font-family: 'Cinzel', serif; font-size: .78rem; font-weight: 700; color: var(--gold); letter-spacing: .1em; margin-bottom: 6px; }
-  .era-title { font-family: 'Cinzel', serif; font-size: 1.05rem; font-weight: 700; color: var(--parchment); margin-bottom: 8px; line-height: 1.2; }
-  .era-desc  { font-size: .93rem; color: #c0a878; line-height: 1.6; }
-  .era-quote { display: inline-block; margin-top: 10px; font-style: italic; font-size: .88rem; color: var(--aged); border-left: 2px solid var(--rust); padding-left: 10px; opacity: .85; }
+  /* ── QUIZ ── */
+  .quiz-section{margin-top:70px;border-top:1px solid rgba(201,150,42,.2);padding-top:60px;opacity:0;animation:fadeIn .8s ease forwards;animation-delay:2.4s;}
+  .quiz-header{text-align:center;margin-bottom:48px;}
+  .quiz-title{font-family:'Cinzel',serif;font-size:clamp(1.5rem,4vw,2.4rem);font-weight:900;color:var(--aged);letter-spacing:.06em;}
+  .quiz-sub{font-style:italic;color:#7a6040;margin-top:8px;font-size:1rem;}
+  .quiz-block{margin-bottom:48px;}
+  .quiz-block-label{display:inline-block;font-family:'Cinzel',serif;font-size:.72rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,150,42,.25);background:rgba(201,150,42,.08);border-radius:20px;padding:5px 18px;margin-bottom:10px;}
+  .quiz-block-desc{font-size:.88rem;font-style:italic;color:#6a5030;margin-bottom:20px;}
+  .q-item{border:1px solid rgba(201,150,42,.12);border-radius:6px;margin-bottom:10px;overflow:hidden;cursor:pointer;transition:border-color .25s;}
+  .q-item:hover{border-color:rgba(201,150,42,.35);}
+  .q-item.open{border-color:rgba(201,150,42,.4);}
+  .q-reflect{border-color:rgba(112,176,112,.12);}
+  .q-reflect:hover{border-color:rgba(112,176,112,.35);}
+  .q-reflect.open{border-color:rgba(112,176,112,.4);}
+  .q-question{display:flex;align-items:flex-start;gap:14px;padding:16px 18px;background:rgba(245,232,200,.04);font-size:.97rem;color:#d4b882;line-height:1.5;transition:background .2s;}
+  .q-item:hover .q-question,.q-item.open .q-question{background:rgba(245,232,200,.08);}
+  .q-num{font-family:'Cinzel',serif;font-size:.72rem;font-weight:700;color:var(--gold);border:1px solid rgba(201,150,42,.3);border-radius:50%;width:24px;height:24px;min-width:24px;display:flex;align-items:center;justify-content:center;margin-top:1px;}
+  .q-arrow{margin-left:auto;font-size:.85rem;color:rgba(201,150,42,.5);transition:transform .25s,color .2s;min-width:14px;text-align:center;}
+  .q-item.open .q-arrow{transform:rotate(90deg);color:rgba(201,150,42,.9);}
+  .q-reflect .q-arrow{color:rgba(112,176,112,.5);}
+  .q-reflect.open .q-arrow{color:rgba(112,176,112,.9);}
+  .q-answer{display:none;padding:18px 20px 18px 56px;font-size:.95rem;color:#c0a878;line-height:1.75;border-top:1px solid rgba(201,150,42,.1);background:rgba(20,12,2,.6);animation:expandIn .3s ease both;}
+  .q-item.open .q-answer{display:block;}
+  .q-answer strong{color:var(--parchment);}
+  .q-reflect-answer{border-top-color:rgba(112,176,112,.1);}
+  .q-reflect-prompt{font-family:'Cinzel',serif;font-size:.68rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#70b070;opacity:.7;margin-bottom:12px;}
+  .q-reflect-answer ul{padding-left:18px;}
+  .q-reflect-answer li{margin-bottom:9px;color:#b8a870;}
+  .q-reflect-answer li strong{color:#d4c890;}
+  .ai-disclaimer{display:flex;gap:12px;align-items:flex-start;margin-top:52px;border:1px solid rgba(201,150,42,.12);border-radius:6px;padding:16px 20px;background:rgba(201,150,42,.04);font-size:.84rem;color:#6a5830;line-height:1.65;}
+  .ai-disclaimer strong{color:#8a7040;}
 
-  /* ── EXPAND PANEL ── */
-  .expand-panel { display: none; grid-column: 1/-1; margin: 0 0 18px; animation: expandIn .4s cubic-bezier(.22,1,.36,1) both; }
-  .expand-panel.open { display: block; }
-  .expand-inner {
-    background: linear-gradient(135deg, rgba(30,18,4,.97) 0%, rgba(20,12,2,.99) 100%);
-    border: 1px solid rgba(201,150,42,.3); border-radius: 8px;
-    padding: 36px 42px; position: relative; overflow: hidden;
-  }
-  .expand-inner::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(to right, transparent, var(--gold), transparent); opacity: .5; }
-  .expand-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
-  .expand-section { margin-bottom: 22px; }
-  .expand-section:last-child { margin-bottom: 0; }
-  .expand-label { font-family: 'Cinzel', serif; font-size: .7rem; font-weight: 700; letter-spacing: .25em; text-transform: uppercase; color: var(--gold); opacity: .7; margin-bottom: 8px; }
-  .expand-text { font-size: 1rem; color: #d4b882; line-height: 1.75; }
-  .expand-text strong { color: var(--parchment); font-weight: 600; }
-  .expand-big-quote {
-    grid-column: 1/-1; text-align: center; font-style: italic; font-size: 1.3rem;
-    color: var(--aged); line-height: 1.6; padding: 24px 20px;
-    border-top: 1px solid rgba(201,150,42,.15); border-bottom: 1px solid rgba(201,150,42,.15); margin: 20px 0;
-  }
-  .expand-big-quote::before { content: '\201C'; font-size: 3rem; line-height: 0; vertical-align: -.5em; color: var(--rust); margin-right: 6px; opacity: .6; }
-  .expand-big-quote::after  { content: '\201D'; font-size: 3rem; line-height: 0; vertical-align: -.5em; color: var(--rust); margin-left:  6px; opacity: .6; }
-  .expand-facts { grid-column: 1/-1; display: flex; flex-wrap: wrap; gap: 12px; }
-  .fact-pill { font-size: .82rem; color: #c0a060; border: 1px solid rgba(201,150,42,.2); border-radius: 20px; padding: 5px 14px; background: rgba(201,150,42,.05); }
-
-  /* ── GLOSSARY TERM ── */
-  .g {
-    color: #e8c76a;
-    border-bottom: 1px dashed rgba(232,199,106,.45);
-    cursor: pointer;
-    transition: color .15s, border-color .15s, background .15s;
-    border-radius: 2px;
-    padding: 0 1px;
-  }
-  .g:hover { color: #ffd96a; border-color: rgba(255,217,106,.75); background: rgba(232,199,106,.08); }
-  .g.g-active { color: #ffe680; border-color: #ffe680; background: rgba(255,230,128,.12); }
-
-  /* ── GLOSSARY POPOVER ── */
-  #gloss-pop {
-    position: fixed;
-    z-index: 9999;
-    max-width: 310px;
-    min-width: 200px;
-    background: linear-gradient(155deg, #2e1c05 0%, #1c0e02 100%);
-    border: 1px solid rgba(201,150,42,.5);
-    border-radius: 10px;
-    padding: 16px 20px 15px;
-    box-shadow: 0 10px 50px rgba(0,0,0,.8), 0 0 0 1px rgba(201,150,42,.08);
-    pointer-events: none;
-    opacity: 0;
-    transform: translateY(8px) scale(.96);
-    transition: opacity .2s ease, transform .2s ease;
-  }
-  #gloss-pop.visible { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
-  #gloss-pop::before { content: ''; position: absolute; top: 0; left: 16px; right: 16px; height: 2px; background: linear-gradient(to right, transparent, var(--gold), transparent); border-radius: 10px 10px 0 0; opacity: .6; }
-  .gp-term { font-family: 'Cinzel', serif; font-size: .76rem; font-weight: 700; color: var(--gold); letter-spacing: .14em; text-transform: uppercase; margin-bottom: 8px; padding-right: 18px; }
-  .gp-def  { font-size: .92rem; color: #d4b882; line-height: 1.65; }
-  .gp-close { position: absolute; top: 9px; right: 11px; font-size: .8rem; color: rgba(201,150,42,.4); cursor: pointer; pointer-events: auto; transition: color .15s; line-height: 1; }
-  .gp-close:hover { color: rgba(201,150,42,.9); }
-
-  /* Era colour overrides */
-  .era-viking .era-dot { border-color: #7a4f2a; background: #1a0a00; }
-  .era-viking .era-title { color: #e8c090; }
-  .era-viking .era-year  { color: #c07030; }
-  .era-old    .era-dot   { border-color: #5a6a4a; }
-  .era-old    .era-year  { color: #90b060; }
-  .era-middle .era-dot   { border-color: #4a5a7a; }
-  .era-middle .era-year  { color: #7090c0; }
-  .era-reform .era-dot   { border-color: #8a5a2a; }
-  .era-reform .era-year  { color: #c09050; }
-  .era-danish .era-dot   { border-color: #6a3a3a; }
-  .era-danish .era-year  { color: #c06060; }
-  .era-1814   .era-dot   { border-color: var(--forest); background: #0a1a0a; }
-  .era-1814   .era-year  { color: #70b070; }
-  .era-1814   .era-title { color: #a0e0a0; }
-  .era-modern .era-dot   { border-color: var(--gold); background: #1a1000; box-shadow: 0 0 8px rgba(201,150,42,.3); }
-  .era-modern .era-year  { color: var(--gold); }
-
-  .rune-strip { text-align: center; margin: 40px 0; color: rgba(201,150,42,.22); font-size: 1.6rem; letter-spacing: .4em; animation: fadeIn 2s ease both; animation-delay: 2s; }
-  .legend { margin-top: 60px; border-top: 1px solid rgba(201,150,42,.2); padding-top: 40px; text-align: center; opacity: 0; animation: fadeIn .8s ease forwards; animation-delay: 2.2s; }
-  .legend h3 { font-family: 'Cinzel', serif; font-size: .9rem; color: var(--aged); letter-spacing: .2em; text-transform: uppercase; margin-bottom: 20px; }
-  .legend-items { display: flex; justify-content: center; flex-wrap: wrap; gap: 24px; }
-  .legend-item  { display: flex; align-items: center; gap: 8px; font-size: .85rem; color: #a89060; }
-  .legend-dot   { width: 10px; height: 10px; border-radius: 50%; border: 2px solid; }
-
-  @keyframes fadeIn  { from{opacity:0} to{opacity:1} }
-  @keyframes slideUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
-  @keyframes expandIn { from{opacity:0;transform:scaleY(.85);transform-origin:top} to{opacity:1;transform:scaleY(1);transform-origin:top} }
-
-  @media (max-width: 700px) {
-    .timeline::before { left: 20px; }
-    .era { grid-template-columns: 40px 1fr; }
-    .era-left { display: none; }
-    .era-center { align-items: flex-start; }
-    .era-right { padding-left: 16px; }
-    .era-dot { width: 14px; height: 14px; }
-    .expand-columns { grid-template-columns: 1fr; }
-    .expand-inner { padding: 24px 20px; }
-    #gloss-pop { max-width: 250px; }
+  @media(max-width:700px){
+    .timeline::before{left:20px;}.era{grid-template-columns:40px 1fr;}.era-left{display:none;}
+    .era-center{align-items:flex-start;}.era-right{padding-left:16px;}.era-dot{width:14px;height:14px;}
+    .expand-columns{grid-template-columns:1fr;}.expand-inner{padding:24px 20px;}
+    #gloss-popup{max-width:240px;}
   }
 </style>
 </head>
 <body>
-<div class="container">
 
+<div id="gloss-popup">
+  <div class="gloss-term" id="gloss-term"></div>
+  <div class="gloss-def"  id="gloss-def"></div>
+  <div class="gloss-arrow"></div>
+  <div class="gloss-arrow-inner"></div>
+</div>
+
+<div class="container">
   <div class="header">
-    <div class="ornament">⸻ ᚱ ᚢ ᚾ ⸻</div>
-    <h1>Norsk Språkhistorie</h1>
-    <p class="subtitle">Fra runer til riksmål og nynorsk</p>
-    <div class="ornament">⸻ ✦ ⸻</div>
+    <div class="ornament">&#x2E3B; &#x16B1; &#x16B2; &#x16BE; &#x2E3B;</div>
+    <h1>Norsk Spr&aring;khistorie</h1>
+    <p class="subtitle">Fra runer til riksm&aring;l og nynorsk</p>
+    <div class="ornament">&#x2E3B; &#x2726; &#x2E3B;</div>
     <div class="hints">
-      <span class="hint">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:.55"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M13 12H3"/></svg>
-        Klikk på et kort for utdypende forklaring
-      </span>
-      <span class="hint">
-        <span class="hint-swatch" style="background:#e8c76a;box-shadow:0 0 5px rgba(232,199,106,.4);"></span>
-        Klikk på <span class="g" style="pointer-events:none;cursor:default">gule ord</span> for begrepsforklaring
-      </span>
+      <span class="hint">&#9655; Klikk et kort for utdypende forklaring</span>
+      <span class="hint" style="color:#c8a838;border-color:rgba(200,168,56,.3);"><span style="border-bottom:1px dashed rgba(200,168,56,.6);">Gule ord</span>&nbsp;= begrepsforklaring</span>
     </div>
   </div>
 
   <div class="timeline">
 
-    <!-- 1 -->
-    <div class="era era-viking">
+    <!-- 1 ELDRE RUNER -->
+    <div class="era era-viking" data-id="runer">
       <div class="era-left">
-        <div class="card" onclick="toggleCard('runer','left')">
-          <div class="era-year">CA. 200 – 800 E.KR.</div>
+        <div class="card" onclick="toggle('runer','left')">
+          <div class="era-year">CA. 200 &ndash; 800 E.KR.</div>
           <div class="era-title">Eldre runer</div>
-          <div class="era-desc"><span class="g" data-g="urnordisk">Urnordisk</span> skrives med <span class="g" data-g="futhark">futhark</span> — 24 tegn ristet på stein, metall og tre til magiske og minneskriftlige formål.</div>
-          <div class="era-quote">ᚺᚱᚩᚾᚩᛉ — «Haralds stein»</div>
+          <div class="era-desc"><span class="g" data-g="futhark">Futhark</span> med 24 tegn brukes til innskrifter p&aring; stein, metall og tre. Spr&aring;ket kalles <span class="g" data-g="urnordisk">urnordisk</span> &mdash; felles for alle germanske folk i Norden.</div>
+          <div class="era-quote">&#x16BA;&#x16B1;&#x16A9;&#x16A9;&#x16ED; &mdash; &laquo;Haralds stein&raquo;</div>
         </div>
       </div>
       <div class="era-center"><div class="era-dot"></div></div>
@@ -242,42 +177,42 @@
             <div>
               <div class="expand-section">
                 <div class="expand-label">Bakgrunn</div>
-                <div class="expand-text">Den eldre <span class="g" data-g="futhark">futharken</span> er det første skriftsystemet brukt i Skandinavia. Runene ble ikke brukt til vanlig skriving, men til <strong>magiske, religiøse og minneskriftlige formål</strong> — på gravsteiner, våpen og smykker. <span class="g" data-g="urnordisk">Urnordisk</span> var felles for alle germanske folk i Norden.</div>
+                <div class="expand-text">Den eldre <span class="g" data-g="futhark">futharken</span> er det f&oslash;rste skriftsystemet brukt i Skandinavia. Runene ble brukt til <strong>magiske, religi&oslash;se og minneskriftlige form&aring;l</strong> &mdash; p&aring; gravsteiner, v&aring;pen og smykker.</div>
               </div>
               <div class="expand-section">
-                <div class="expand-label">Språket</div>
-                <div class="expand-text"><span class="g" data-g="urnordisk">Urnordisk</span> er forfedrespråket til alle moderne nordiske språk. Innskriftene er kortfattede og formelaktige — navn, eiermerker og beskyttelsesformler. Selve ordet «futhark» er satt sammen av de seks første runene: <strong>ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ</strong>.</div>
+                <div class="expand-label">Spr&aring;ket</div>
+                <div class="expand-text"><span class="g" data-g="urnordisk">Urnordisk</span> er forfedrespr&aring;ket til alle moderne nordiske spr&aring;k. Innskriftene er kortfattede og <span class="g" data-g="formelaktig">formelaktige</span> &mdash; navn, eiermerker og beskyttelsesformler.</div>
               </div>
             </div>
             <div>
               <div class="expand-section">
                 <div class="expand-label">Viktige funn</div>
-                <div class="expand-text"><strong>Tune-steinen</strong> (ca. 350 e.kr.) i Østfold er Norges eldste runeinnskrift. Over 350 innskrifter er funnet i Skandinavia. <span class="g" data-g="gallehus">Gallehus-hornene</span> fra Danmark er blant de mest kjente gjenstandene med <span class="g" data-g="futhark">elder futhark</span>-innskrift.</div>
+                <div class="expand-text"><strong>Tune-steinen</strong> (ca. 350 e.kr.) i &Oslash;stfold er Norges eldste runeinnskrift. <strong>Gallehus-hornene</strong> fra Danmark og <strong>Kj&oslash;levik-steinen</strong> fra Rogaland er sentrale eksempler. Over 350 innskrifter kjent fra Skandinavia.</div>
               </div>
               <div class="expand-section">
                 <div class="expand-label">Opphav</div>
-                <div class="expand-text">Runeskriften ble trolig utviklet fra det <span class="g" data-g="latinsk">latinske</span> eller etruskiske alfabetet, tilpasset å ristes i tre og stein — derav de rette, vinkelrette formene uten buer.</div>
+                <div class="expand-text">Runeskriften ble trolig utviklet fra det <span class="g" data-g="latinsk">latinske</span> eller <span class="g" data-g="etruskisk">etruskiske</span> alfabetet, tilpasset &aring; ristes i tre og stein &mdash; derav de rette formene uten buer.</div>
               </div>
             </div>
           </div>
-          <div class="expand-big-quote">hlewagastiz holtijaz horna tawido — «Jeg, Hlewagastiz, sønn av Holti, lagde hornet»</div>
+          <div class="expand-big-quote">hlewagastiz holtijaz horna tawido &mdash; &laquo;Jeg, Hlewagastiz, s&oslash;nn av Holti, lagde hornet&raquo;</div>
           <div class="expand-facts">
-            <span class="fact-pill">24 runer i futharken</span><span class="fact-pill">Ca. 350 innskrifter bevart</span><span class="fact-pill">Tune-steinen: ca. 350 e.kr.</span><span class="fact-pill">Magisk-religiøs funksjon</span>
+            <span class="fact-pill">24 runer i futharken</span><span class="fact-pill">Ca. 350 innskrifter bevart</span><span class="fact-pill">Tune-steinen: ca. 350 e.kr.</span><span class="fact-pill">Magisk-religi&oslash;s funksjon</span>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 2 -->
-    <div class="era era-old">
+    <!-- 2 VIKINGTID -->
+    <div class="era era-old" data-id="viking">
       <div class="era-left"></div>
       <div class="era-center"><div class="era-dot"></div></div>
       <div class="era-right">
-        <div class="card" onclick="toggleCard('viking','right')">
-          <div class="era-year">800 – 1050 E.KR.</div>
-          <div class="era-title">Vikingtid & yngre runer</div>
-          <div class="era-desc"><span class="g" data-g="futhark">Futharken</span> forenkles til 16 tegn. <span class="g" data-g="norrønt">Norrønt</span> oppstår — spredt fra Island til Russland av vikingene.</div>
-          <div class="era-quote">«Þór vígi þessa rúnar»</div>
+        <div class="card" onclick="toggle('viking','right')">
+          <div class="era-year">800 &ndash; 1050 E.KR.</div>
+          <div class="era-title">Vikingtid &amp; yngre runer</div>
+          <div class="era-desc">Alfabetet forenkles til 16 runer. <span class="g" data-g="norrønt">Norr&oslash;nt</span> oppst&aring;r &mdash; spredt fra Island til Russland av vikingene.</div>
+          <div class="era-quote">&laquo;&THORN;&oacute;r v&iacute;gi &thorn;essa r&uacute;nar&raquo;</div>
         </div>
       </div>
       <div class="expand-panel" id="panel-viking">
@@ -285,41 +220,41 @@
           <div class="expand-columns">
             <div>
               <div class="expand-section">
-                <div class="expand-label">Norrønt språk</div>
-                <div class="expand-text"><span class="g" data-g="norrønt">Norrønt</span> er forfedrespråket til norsk, islandsk, færøysk, dansk og svensk. Det var et rikt <span class="g" data-g="bøyning">bøyningsspråk</span> med fire <span class="g" data-g="kasus">kasus</span>, tre kjønn og kompleks verbmorfologi — langt mer innviklet enn moderne norsk.</div>
+                <div class="expand-label">Norr&oslash;nt spr&aring;k</div>
+                <div class="expand-text"><span class="g" data-g="norrønt">Norr&oslash;nt</span> er felles forfar til norsk, islandsk, f&aelig;r&oslash;ysk, dansk og svensk. Det var et rikt <span class="g" data-g="bøyningsspråk">b&oslash;yningsspr&aring;k</span> med fire <span class="g" data-g="kasus">kasus</span> og tre kj&oslash;nn.</div>
               </div>
               <div class="expand-section">
                 <div class="expand-label">Paradokset med 16 runer</div>
-                <div class="expand-text">Paradoksalt nok ble <span class="g" data-g="futhark">futharken</span> <strong>forenklet</strong> akkurat da bruken økte. Den yngre varianten hadde bare 16 tegn for et språk med mange flere lyder — én rune måtte representere flere forskjellige lyder.</div>
+                <div class="expand-text">Paradoksalt nok ble alfabetet <strong>forenklet</strong> akkurat da det ble mer utbredt. Den yngre <span class="g" data-g="futhark">futharken</span> hadde bare 16 tegn for et spr&aring;k med mange flere lyder.</div>
               </div>
             </div>
             <div>
               <div class="expand-section">
                 <div class="expand-label">Geografisk spredning</div>
-                <div class="expand-text">Vikingene spredte <span class="g" data-g="norrønt">norrønt</span> over et enormt område: Island, Grønland, Normandie, deler av Britannia, Irland, <span class="g" data-g="rus">Rus-staten</span> og Konstantinopel. Runeinnskrifter er funnet i <span class="g" data-g="hagiasofía">Hagia Sofia</span>!</div>
+                <div class="expand-text">Vikingene spredte norr&oslash;nt over et enormt omr&aring;de: <strong>Island</strong>, <strong>Gr&oslash;nland</strong>, <strong>Normandie</strong>, deler av <strong>Britannia</strong>, <strong>Russland</strong> og <strong>Konstantinopel</strong>. Runeinnskrifter er funnet inne i Hagia Sofia!</div>
               </div>
               <div class="expand-section">
                 <div class="expand-label">Runesteiner</div>
-                <div class="expand-text">Over 3000 vikingtids-<span class="g" data-g="runesten">runesteiner</span> er bevart i Skandinavia, flest i Sverige. De hedrer avdøde, kunngjør eiendomsrett og dokumenterer reiser — tidens offentlige kunngjøringer.</div>
+                <div class="expand-text">Over 3000 vikingtids-runesteiner er bevart i Skandinavia. De hedrer avd&oslash;de, kunnkj&oslash;r eiendomsrett og dokumenterer reiser.</div>
               </div>
             </div>
           </div>
-          <div class="expand-big-quote">Þór vígi þessa rúnar — «Tor innvie disse runene»</div>
+          <div class="expand-big-quote">&THORN;&oacute;r v&iacute;gi &thorn;essa r&uacute;nar &mdash; &laquo;Tor innvie disse runene&raquo;</div>
           <div class="expand-facts">
-            <span class="fact-pill">16 runer i yngre futhark</span><span class="fact-pill">Over 3000 runesteiner</span><span class="fact-pill">Norrønt fra Island til Volga</span><span class="fact-pill">Runer i Hagia Sofia</span>
+            <span class="fact-pill">16 runer i yngre futhark</span><span class="fact-pill">Over 3000 runesteiner</span><span class="fact-pill">Norr&oslash;nt fra Island til Volga</span><span class="fact-pill">Runer i Hagia Sofia</span>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 3 -->
-    <div class="era era-old">
+    <!-- 3 GAMMELNORSK -->
+    <div class="era era-old" data-id="gammelnorsk">
       <div class="era-left">
-        <div class="card" onclick="toggleCard('gammelnorsk','left')">
-          <div class="era-year">1050 – 1350</div>
+        <div class="card" onclick="toggle('gammelnorsk','left')">
+          <div class="era-year">1050 &ndash; 1350</div>
           <div class="era-title">Gammelnorsk storhetstid</div>
-          <div class="era-desc">Det <span class="g" data-g="latinsk">latinske</span> alfabetet innføres. <span class="g" data-g="norrønt">Norrønt</span> blomstrer i <span class="g" data-g="sagaer">sagaer</span>, lovtekster og skaldekvad.</div>
-          <div class="era-quote">«Med lög skal land byggjas»</div>
+          <div class="era-desc">Det <span class="g" data-g="latinsk">latinske</span> alfabetet innf&oslash;res med kristendommen. <span class="g" data-g="norrønt">Norr&oslash;nt</span> blomstrer i <span class="g" data-g="sagaer">sagaer</span>, lovtekster og <span class="g" data-g="skaldekvad">skaldekvad</span>.</div>
+          <div class="era-quote">&laquo;Med l&ouml;g skal land byggjas&raquo;</div>
         </div>
       </div>
       <div class="era-center"><div class="era-dot"></div></div>
@@ -330,42 +265,42 @@
             <div>
               <div class="expand-section">
                 <div class="expand-label">Kristendommen og skriften</div>
-                <div class="expand-text">Med kristendommen (ca. 1000 e.kr.) fulgte <span class="g" data-g="latinsk">latinske bokstaver</span>. <span class="g" data-g="kloster">Klostre</span> ble sentre for lærd skriving. <span class="g" data-g="norrønt">Norrønt</span> ble nå brukt til bøker, lover og poesi — ikke bare runer.</div>
+                <div class="expand-text">Med kristendommen (ca. 1000 e.kr.) fulgte <span class="g" data-g="latinsk">latinske</span> bokstaver. <span class="g" data-g="norrønt">Norr&oslash;nt</span> ble brukt til b&oslash;ker, lover og poesi. Klostre ble sentre for l&aelig;rd skriving.</div>
               </div>
               <div class="expand-section">
                 <div class="expand-label">Sagalitteraturen</div>
-                <div class="expand-text"><span class="g" data-g="sagaer">Sagaene</span> er Norges og Islands store litterære skatt. <strong>Heimskringla</strong> av <span class="g" data-g="snorre">Snorre Sturlason</span> (ca. 1230) forteller om norske konger fra mytisk tid — blant middelalderens fremste prosaverker.</div>
+                <div class="expand-text"><strong>Heimskringla</strong> av <span class="g" data-g="snorre">Snorre Sturlason</span> (ca. 1230) forteller om norske konger fra mytisk tid til 1177. <span class="g" data-g="sagaer">Sagaene</span> er middelalderens fremste prosalitteratur.</div>
               </div>
             </div>
             <div>
               <div class="expand-section">
                 <div class="expand-label">Lovtekstene</div>
-                <div class="expand-text"><strong>Magnus Lagabøtes landslov</strong> (1274) var en av Europas første landsomfattende lover. Skrevet på <span class="g" data-g="norrønt">norrønt</span> — klar, systematisk og vakker prosa.</div>
+                <div class="expand-text"><span class="g" data-g="landslov">Magnus Lagab&oslash;tes landslov</span> (1274) var en av Europas f&oslash;rste landsomfattende lover. Skrevet p&aring; norr&oslash;nt &mdash; klar og vakker prosa.</div>
               </div>
               <div class="expand-section">
                 <div class="expand-label">Kultursentre</div>
-                <div class="expand-text">Bergen (grunnlagt 1070) og Nidaros (<span class="g" data-g="erkebiskop">erkebispesete</span> fra 1152) var de viktigste sentrene. <span class="g" data-g="nidarosdomen">Nidarosdomen</span> ble et valfartssted og kulturelt tyngdepunkt.</div>
+                <div class="expand-text"><strong>Bergen</strong> og <strong>Nidaros/Trondheim</strong> (<span class="g" data-g="erkebispe">erkebispesete</span> fra 1152) var de viktigste sentrene. Nidarosdomen ble valfartssted for hele Norden.</div>
               </div>
             </div>
           </div>
-          <div class="expand-big-quote">Med lög skal land byggjas, en med ulogum eyðask — «Med lov skal landet bygges, med ulov ødes»</div>
+          <div class="expand-big-quote">Med l&ouml;g skal land byggjas, en med ulogum ey&eth;ask</div>
           <div class="expand-facts">
-            <span class="fact-pill">Heimskringla ca. 1230</span><span class="fact-pill">Landslov 1274</span><span class="fact-pill">Latin og norrønt side ved side</span>
+            <span class="fact-pill">Heimskringla ca. 1230</span><span class="fact-pill">Landslov 1274</span><span class="fact-pill">Latin og norr&oslash;nt side om side</span><span class="fact-pill">Nidarosdomen valfartssted</span>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 4 -->
-    <div class="era era-middle">
+    <!-- 4 SVARTEDAUDEN -->
+    <div class="era era-middle" data-id="svarte">
       <div class="era-left"></div>
       <div class="era-center"><div class="era-dot"></div></div>
       <div class="era-right">
-        <div class="card" onclick="toggleCard('svarte','right')">
-          <div class="era-year">1349 – 1400-TALL</div>
-          <div class="era-title">Svartedauden & nedgang</div>
+        <div class="card" onclick="toggle('svarte','right')">
+          <div class="era-year">1349 &ndash; 1400-TALL</div>
+          <div class="era-title">Svartedauden &amp; nedgang</div>
           <div class="era-desc"><span class="g" data-g="svartedauden">Svartedauden</span> dreper halvparten av befolkningen. Skriftkultur bryter sammen. <span class="g" data-g="mellomnorsk">Mellomnorsk</span> overtar.</div>
-          <div class="era-quote">Skriften tause — folket sørgjer</div>
+          <div class="era-quote">Skriften tause &mdash; folket s&oslash;rgjer</div>
         </div>
       </div>
       <div class="expand-panel" id="panel-svarte">
@@ -374,40 +309,40 @@
             <div>
               <div class="expand-section">
                 <div class="expand-label">Katastrofen</div>
-                <div class="expand-text"><span class="g" data-g="svartedauden">Svartedauden</span> ankom Bergen i 1349. På to–tre år døde anslagsvis <strong>50–60 % av befolkningen</strong>. <span class="g" data-g="kleresiet">Kleresiet</span> — bærerne av skriftkultur — ble særlig hardt rammet. Mange <span class="g" data-g="kloster">klostre</span> ble helt avfolket.</div>
+                <div class="expand-text"><span class="g" data-g="svartedauden">Svartedauden</span> ankom Norge til Bergen i <strong>1349</strong>. P&aring; to&ndash;tre &aring;r d&oslash;de anslagsvis <strong>50&ndash;60 %</strong> av befolkningen. <span class="g" data-g="kleresiet">Kleresiet</span> &mdash; bærerne av skriftkultur &mdash; ble s&aelig;rlig hardt rammet.</div>
               </div>
               <div class="expand-section">
                 <div class="expand-label">Mellomnorsk</div>
-                <div class="expand-text"><span class="g" data-g="mellomnorsk">Mellomnorsk</span> (ca. 1350–1550) er en overgangsform — det klassiske <span class="g" data-g="norrønt">norrønt</span> slo sprekker. Skriftmiljøene gjenoppbygdes med geistlige fra England, Tyskland og Sverige, som påvirket språket sterkt.</div>
+                <div class="expand-text"><span class="g" data-g="mellomnorsk">Mellomnorsk</span> (ca. 1350&ndash;1550) er overgangsformen mellom gammelnorsk og det dansk-dominerte skriftspråket. Det klassiske norr&oslash;nt slo sprekker fra alle kanter.</div>
               </div>
             </div>
             <div>
               <div class="expand-section">
-                <div class="expand-label">Politiske følger</div>
-                <div class="expand-text">Den demografiske kollapsen svekket den norske adelen dramatisk. Da kong Håkon VI døde i 1380, arvet hans sønn begge troner. Norge gikk inn i <span class="g" data-g="kalmarunionen">union med Danmark</span> — og aldri helt ut igjen på 434 år.</div>
+                <div class="expand-label">Politiske f&oslash;lger</div>
+                <div class="expand-text">Kollapsen svekket den norske adelen dramatisk. Da H&aring;kon VI d&oslash;de i 1380, gikk Norge inn i <span class="g" data-g="union">union</span> med Danmark &mdash; og aldri helt ut igjen p&aring; 434 &aring;r.</div>
               </div>
               <div class="expand-section">
                 <div class="expand-label">Hanseatene</div>
-                <div class="expand-text">Tyske kjøpmenn fra <span class="g" data-g="hansa">Hansaforbundet</span> dominerte Bergens handel. Deres <span class="g" data-g="mnd">middelnedertyske</span> språk ga hundrevis av lånord innen handel, håndverk og sjøfart.</div>
+                <div class="expand-text">Tyske kj&oslash;pmenn fra <span class="g" data-g="hansaen">Hansaforbundet</span> dominerte Bergens handel. Deres <span class="g" data-g="middelnedertysk">middelnedertyske</span> spr&aring;k ga norsk hundrevis av l&aring;nord.</div>
               </div>
             </div>
           </div>
-          <div class="expand-big-quote">Gud slo oss med sin vrede — halvparten av folket ble lagt i graven</div>
+          <div class="expand-big-quote">Gud slo oss med sin vrede &mdash; halvparten av folket ble lagt i graven</div>
           <div class="expand-facts">
-            <span class="fact-pill">1349: pesten til Bergen</span><span class="fact-pill">~50% av befolkningen døde</span><span class="fact-pill">Hanseatene i Bergen</span><span class="fact-pill">Hundrevis av tyske lånord</span>
+            <span class="fact-pill">1349: pesten til Bergen</span><span class="fact-pill">~50% av befolkningen d&oslash;de</span><span class="fact-pill">Hanseatene p&aring; Bryggen</span><span class="fact-pill">Hundrevis av tyske l&aring;nord</span>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 5 -->
-    <div class="era era-danish">
+    <!-- 5 DANSKETIDEN -->
+    <div class="era era-danish" data-id="dansk">
       <div class="era-left">
-        <div class="card" onclick="toggleCard('dansk','left')">
-          <div class="era-year">1380 – 1814</div>
+        <div class="card" onclick="toggle('dansk','left')">
+          <div class="era-year">1380 &ndash; 1814</div>
           <div class="era-title">Dansketiden</div>
-          <div class="era-desc">Dansk blir <span class="g" data-g="rikssprak">riksspråk</span> i kirke, lov og skole. Norsk overlever som talemål i <span class="g" data-g="dialekt">dialektene</span>.</div>
-          <div class="era-quote">«Det danske Tungemaal»</div>
+          <div class="era-desc">Norge i <span class="g" data-g="union">union</span> med Danmark. Dansk blir <span class="g" data-g="riksspråk">riksspr&aring;k</span> i kirke, lov og skole. Norsk overlever som talespr&aring;k i bygdene.</div>
+          <div class="era-quote">&laquo;Det danske Tungemaal&raquo;</div>
         </div>
       </div>
       <div class="era-center"><div class="era-dot"></div></div>
@@ -417,43 +352,43 @@
           <div class="expand-columns">
             <div>
               <div class="expand-section">
-                <div class="expand-label">Fire hundre år</div>
-                <div class="expand-text">Fra 1380 til 1814 var Norge i <span class="g" data-g="kalmarunionen">union med Danmark</span>. Dansk ble <span class="g" data-g="rikssprak">enerådende skriftspråk</span> i kirken, domstolene og alle skoler. Alle norske <span class="g" data-g="embetsmann">embetsmenn</span> leste og skrev dansk.</div>
+                <div class="expand-label">Fire hundre &aring;r</div>
+                <div class="expand-text">Dansk ble <span class="g" data-g="riksspråk">riksspr&aring;k</span> etter <span class="g" data-g="reformasjonen">reformasjonen</span> 1537. Bibelen p&aring; dansk (1550) forsterket danskens grep om skriftkulturen enormt.</div>
               </div>
               <div class="expand-section">
-                <div class="expand-label">Reformasjonen 1537</div>
-                <div class="expand-text">Da Christian III innførte luthersk <span class="g" data-g="reformasjon">reformasjon</span> i 1537, ble Danmark–Norge ett kirkerike. <strong>Bibelen på dansk</strong> (1550) forsterket danskens grep om den norske skriftkulturen enormt.</div>
+                <div class="expand-label">Norsk som talespr&aring;k</div>
+                <div class="expand-text">Norsk levde videre i <span class="g" data-g="dialekt">dialektene</span>. B&oslash;nder og fiskere snakket norsk hjemme &mdash; og disse dialektene bevarte mange trekk fra <span class="g" data-g="norrønt">gammelnorsk</span>.</div>
               </div>
             </div>
             <div>
               <div class="expand-section">
-                <div class="expand-label">Norsk som talemål</div>
-                <div class="expand-text">Selv om norsk ikke ble skrevet, levde det videre i <span class="g" data-g="dialekt">dialektene</span>. Disse bevarte mange trekk fra <span class="g" data-g="norrønt">gammelnorsk</span> — nettopp disse samlet <span class="g" data-g="aasen">Ivar Aasen</span> til nynorsk.</div>
+                <div class="expand-label">&laquo;Dansk-norsk&raquo;</div>
+                <div class="expand-text">Bybefolkning og <span class="g" data-g="embetsmenn">embetsmenn</span> utviklet et <strong>&laquo;dansk-norsk&raquo;</strong> talem&aring;l &mdash; skriftlig dansk uttalt med norsk aksent. <span class="g" data-g="holberg">Ludvig Holberg</span> (1684&ndash;1754) er det fremste eksempel.</div>
               </div>
               <div class="expand-section">
-                <div class="expand-label">«Dansk-norsk»</div>
-                <div class="expand-text">Bybefolkning og <span class="g" data-g="embetsmann">embetsmenn</span> utviklet gradvis et <span class="g" data-g="dansknorsk">«dansk-norsk»</span> talespråk — skriftlig dansk uttalt med norsk aksent. Forløperen til <span class="g" data-g="bokmal">bokmål</span>. <span class="g" data-g="holberg">Ludvig Holberg</span> er det fremste eksempel.</div>
+                <div class="expand-label">Reformasjonen</div>
+                <div class="expand-text"><span class="g" data-g="reformasjonen">Reformasjonen</span> 1537 gjorde dansk til eneste kirkespr&aring;k. All presteutdanning, alle salmeb&oslash;ker og alle lover &mdash; alt p&aring; dansk.</div>
               </div>
             </div>
           </div>
-          <div class="expand-big-quote">Det norske Folks Sprog er og bliver det Danske — Christian Vs lov, 1687</div>
+          <div class="expand-big-quote">Det norske Folks Sprog er og bliver det Danske &mdash; Christian Vs lov, 1687</div>
           <div class="expand-facts">
-            <span class="fact-pill">434 år dansk union</span><span class="fact-pill">Reformasjonen 1537</span><span class="fact-pill">Bibel på dansk 1550</span><span class="fact-pill">Ludvig Holberg (1684–1754)</span>
+            <span class="fact-pill">434 &aring;r dansk union</span><span class="fact-pill">Reformasjonen 1537</span><span class="fact-pill">Bibel p&aring; dansk 1550</span><span class="fact-pill">Ludvig Holberg (1684&ndash;1754)</span>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 6 -->
-    <div class="era era-1814">
+    <!-- 6 1814 -->
+    <div class="era era-1814" data-id="atten14">
       <div class="era-left"></div>
       <div class="era-center"><div class="era-dot"></div></div>
       <div class="era-right">
-        <div class="card" onclick="toggleCard('atten14','right')">
+        <div class="card" onclick="toggle('atten14','right')">
           <div class="era-year">1814</div>
-          <div class="era-title">Grunnloven & nasjonal vekkelse</div>
-          <div class="era-desc"><span class="g" data-g="romantisknasjonalisme">Romantisk nasjonalisme</span> og <span class="g" data-g="grunnloven">Grunnloven</span> setter i gang debatten om et norsk skriftspråk.</div>
-          <div class="era-quote">«Eidsvoll, 17. mai 1814»</div>
+          <div class="era-title">Grunnloven &amp; nasjonal vekkelse</div>
+          <div class="era-desc">Selvstendighet skaper ny spr&aring;kbevissthet. <span class="g" data-g="grunnloven">Grunnloven</span> skrives p&aring; dansk-norsk. Debatten om et norsk skriftspråk starter for alvor.</div>
+          <div class="era-quote">&laquo;Eidsvoll, 17. mai 1814&raquo;</div>
         </div>
       </div>
       <div class="expand-panel" id="panel-atten14">
@@ -461,41 +396,41 @@
           <div class="expand-columns">
             <div>
               <div class="expand-section">
-                <div class="expand-label">Frigjøring og ironi</div>
-                <div class="expand-text">Da Napoleon-krigen sluttet og Danmark måtte avstå Norge (<span class="g" data-g="kielfreden">Kielfreden</span> januar 1814), vedtok norske <span class="g" data-g="embetsmann">embetsmenn</span> en grunnlov 17. mai — <strong>skrevet på dansk</strong>. Ironien var tydelig for alle.</div>
+                <div class="expand-label">Frigj&oslash;ring og ironi</div>
+                <div class="expand-text"><span class="g" data-g="kielfreden">Kielfreden</span> tvang Danmark til &aring; avstå Norge til Sverige. P&aring; Eidsvoll vedtok norske <span class="g" data-g="embetsmenn">embetsmenn</span> <span class="g" data-g="grunnloven">Grunnloven</span> 17. mai 1814 &mdash; skrevet p&aring; dansk. Ironien var tydelig for alle.</div>
               </div>
               <div class="expand-section">
                 <div class="expand-label">Romantisk nasjonalisme</div>
-                <div class="expand-text">En europeisk bølge av <span class="g" data-g="romantisknasjonalisme">romantisk nasjonalisme</span> traff Norge. Folkeeventyr ble samlet av <span class="g" data-g="asbjornsen">Asbjørnsen og Moe</span>. Alt ble brukt til å konstruere en norsk nasjonal identitet.</div>
+                <div class="expand-text">En europeisk b&oslash;lge av <span class="g" data-g="romantisknasjonalisme">romantisk nasjonalisme</span> traff Norge. <strong>Asbj&oslash;rnsen og Moe</strong> samlet eventyr. Musikk, maleri og litteratur bygget en norsk nasjonal identitet.</div>
               </div>
             </div>
             <div>
               <div class="expand-section">
-                <div class="expand-label">Universitetet 1811</div>
-                <div class="expand-text">Universitetet i Christiania ga Norge sin første lærde institusjon. Her vokste en ny generasjon intellektuelle frem som stilte spørsmålet: <em>Hva er egentlig norsk?</em></div>
+                <div class="expand-label">Wergeland vs. Welhaven</div>
+                <div class="expand-text">Henrik <span class="g" data-g="wergeland">Wergeland</span> ville ha et folkelig norsk-pregat spr&aring;k straks. Johan Sebastian <span class="g" data-g="welhaven">Welhaven</span> mente man m&aring;tte beholde det dansk-norske. Denne sp&aelig;nningen lever videre.</div>
               </div>
               <div class="expand-section">
-                <div class="expand-label">Wergeland vs. Welhaven</div>
-                <div class="expand-text">Henrik <span class="g" data-g="wergeland">Wergeland</span> ville ha et folkelig norsk-pregat språk straks. Johan Sebastian <span class="g" data-g="welhaven">Welhaven</span> mente man måtte beholde det dansk-norske. Denne spenningen lever videre.</div>
+                <div class="expand-label">Universitetet</div>
+                <div class="expand-text">Universitetet i Christiania ble grunnlagt i <strong>1811</strong> &mdash; endelig hadde Norge sin egen l&aelig;rde institusjon, som stilte sp&oslash;rsm&aring;let: <em>Hva er egentlig norsk?</em></div>
               </div>
             </div>
           </div>
-          <div class="expand-big-quote">Vi er et folk — vi bør ha et språk som er vårt eget</div>
+          <div class="expand-big-quote">Vi er et folk &mdash; vi b&oslash;r ha et spr&aring;k som er v&aring;rt eget</div>
           <div class="expand-facts">
-            <span class="fact-pill">Grunnloven 17. mai 1814</span><span class="fact-pill">Kielfreden januar 1814</span><span class="fact-pill">Universitetet 1811</span><span class="fact-pill">Asbjørnsen & Moe: eventyr</span>
+            <span class="fact-pill">Grunnloven 17. mai 1814</span><span class="fact-pill">Kielfreden januar 1814</span><span class="fact-pill">Universitetet i Christiania 1811</span><span class="fact-pill">Asbj&oslash;rnsen &amp; Moe: eventyr</span>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 7 -->
-    <div class="era era-reform">
+    <!-- 7 TO VEIER -->
+    <div class="era era-reform" data-id="toveier">
       <div class="era-left">
-        <div class="card" onclick="toggleCard('toveier','left')">
-          <div class="era-year">1850 – 1900</div>
-          <div class="era-title">To veier — én nasjon</div>
-          <div class="era-desc"><span class="g" data-g="aasen">Ivar Aasen</span> skaper <span class="g" data-g="landsmaal">landsmål</span>. <span class="g" data-g="knudsen">Knud Knudsen</span> fornorsker <span class="g" data-g="riksmal">riksmålet</span>. To løsninger på samme problem.</div>
-          <div class="era-quote">«Norsk er ikkje eitt — norsk er mangfald»</div>
+        <div class="card" onclick="toggle('toveier','left')">
+          <div class="era-year">1850 &ndash; 1900</div>
+          <div class="era-title">To veier &mdash; &eacute;n nasjon</div>
+          <div class="era-desc"><span class="g" data-g="ivaraasen">Ivar Aasen</span> skaper <span class="g" data-g="landsmål">landsm&aring;l</span>. <span class="g" data-g="knudsen">Knud Knudsen</span> fornorsker <span class="g" data-g="riksmål">riksm&aring;let</span>. To l&oslash;sninger p&aring; samme problem.</div>
+          <div class="era-quote">&laquo;Norsk er ikkje eitt &mdash; norsk er mangfald&raquo;</div>
         </div>
       </div>
       <div class="era-center"><div class="era-dot"></div></div>
@@ -505,45 +440,35 @@
           <div class="expand-columns">
             <div>
               <div class="expand-section">
-                <div class="expand-label">Ivar Aasen (1813–1896)</div>
-                <div class="expand-text"><span class="g" data-g="aasen">Selvlært lingvist</span> fra Ørsta i Sunnmøre. Aasen kartla <span class="g" data-g="dialekt">dialektene</span> systematisk. I <strong>«Det norske Folkesprogs Grammatik»</strong> (1848) og <strong>«Ordbog over det norske Folkesprog»</strong> (1850) la han grunnlaget for <span class="g" data-g="landsmaal">landsmål</span>.</div>
+                <div class="expand-label">Ivar Aasen (1813&ndash;1896)</div>
+                <div class="expand-text">Selvl&aelig;rt <span class="g" data-g="lingvist">lingvist</span> fra &Oslash;rsta. Reiste rundt i norske bygder og kartla <span class="g" data-g="dialekt">dialektene</span> systematisk. I <strong>Grammatikken</strong> (1848) og <strong>Ordboken</strong> (1850) la han grunnlaget for <span class="g" data-g="landsmål">landsm&aring;l</span>.</div>
               </div>
             </div>
             <div>
               <div class="expand-section">
-                <div class="expand-label">Knud Knudsen (1812–1895)</div>
-                <div class="expand-text">Skolemann og språk­reformatør. <span class="g" data-g="knudsen">Knudsen</span> mente man skulle fornorske det eksisterende <span class="g" data-g="dansknorsk">dansk-norske</span> skriftspråket gradvis. Hans linje ble til <span class="g" data-g="riksmal">riksmål</span> og siden <span class="g" data-g="bokmal">bokmål</span>.</div>
+                <div class="expand-label">Knud Knudsen (1812&ndash;1895)</div>
+                <div class="expand-text">Skolemann og spr&aring;kreformat&oslash;r. <span class="g" data-g="knudsen">Knudsen</span> mente man skulle <strong>fornorske det eksisterende</strong> dansk-norske skriftspr&aring;ket gradvis. Hans linje ble til <span class="g" data-g="riksmål">riksm&aring;l</span> og siden <span class="g" data-g="bokmål">bokm&aring;l</span>.</div>
               </div>
             </div>
           </div>
-          <div class="expand-big-quote">Det er to vegar til same mål — eit norsk skriftspråk for det norske folket</div>
-          <div class="expand-columns" style="margin-top:20px;">
-            <div><div class="expand-section">
-              <div class="expand-label">Aasens metode</div>
-              <div class="expand-text">Konstruerte et <em>nytt</em> skriftspråk nedenfra — fra <span class="g" data-g="dialekt">dialektene</span>, med <span class="g" data-g="norrønt">gammelnorsk</span> som ideal. Demokratisk: bondespråket ble løftet frem.</div>
-            </div></div>
-            <div><div class="expand-section">
-              <div class="expand-label">Knudsens metode</div>
-              <div class="expand-text">Reformerte det <em>eksisterende</em> skriftspråket ovenfra — gradvis og pragmatisk. Beholdt kontinuiteten med tradisjonen fra <span class="g" data-g="holberg">Holberg</span> og Wergeland.</div>
-            </div></div>
-          </div>
+          <div class="expand-big-quote">Det er to vegar til same m&aring;l &mdash; eit norsk skriftspr&aring;k for det norske folket</div>
           <div class="expand-facts">
-            <span class="fact-pill">Aasen: grammatikk 1848</span><span class="fact-pill">Aasen: ordbok 1850</span><span class="fact-pill">Første landsmål-tekst 1853</span><span class="fact-pill">Knudsen: «gradvis fornorsking»</span>
+            <span class="fact-pill">Aasen: grammatikk 1848</span><span class="fact-pill">Aasen: ordbok 1850</span><span class="fact-pill">F&oslash;rste landsm&aring;l-tekst 1853</span><span class="fact-pill">Knudsen: gradvis fornorsking</span>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 8 -->
-    <div class="era era-modern">
+    <!-- 8 MODERNE -->
+    <div class="era era-modern" data-id="modern">
       <div class="era-left"></div>
       <div class="era-center"><div class="era-dot"></div></div>
       <div class="era-right">
-        <div class="card" onclick="toggleCard('modern','right')">
-          <div class="era-year">1900 – I DAG</div>
-          <div class="era-title">Bokmål & nynorsk</div>
-          <div class="era-desc">To likestilte skriftspråk. <span class="g" data-g="samnorsk">Samnorsk</span>-prosjektet mislykkes. <span class="g" data-g="mallov">Målloven</span> sikrer begge i dag.</div>
-          <div class="era-quote">«Begge er norsk»</div>
+        <div class="card" onclick="toggle('modern','right')">
+          <div class="era-year">1900 &ndash; I DAG</div>
+          <div class="era-title">Bokm&aring;l &amp; nynorsk</div>
+          <div class="era-desc"><span class="g" data-g="riksmål">Riksm&aring;l</span> omd&oslash;pes til <span class="g" data-g="bokmål">bokm&aring;l</span> (1929), <span class="g" data-g="landsmål">landsm&aring;l</span> til <span class="g" data-g="nynorsk">nynorsk</span>. <span class="g" data-g="samnorsk">Samnorsk</span>-prosjektet fors&oslash;kes og mislykkes. To likestilte skriftspr&aring;k.</div>
+          <div class="era-quote">&laquo;Begge er norsk&raquo;</div>
         </div>
       </div>
       <div class="expand-panel" id="panel-modern">
@@ -552,27 +477,27 @@
             <div>
               <div class="expand-section">
                 <div class="expand-label">Navnebytte 1929</div>
-                <div class="expand-text">I 1929 vedtok Stortinget nye navn: <strong><span class="g" data-g="riksmal">riksmål</span> → <span class="g" data-g="bokmal">bokmål</span></strong> og <strong><span class="g" data-g="landsmaal">landsmål</span> → <span class="g" data-g="nynorsk">nynorsk</span></strong>. Hensikten var å markere at begge var likestilte norske skriftspråk.</div>
+                <div class="expand-text">I 1929 vedtok Stortinget: <strong><span class="g" data-g="riksmål">riksm&aring;l</span> &rarr; <span class="g" data-g="bokmål">bokm&aring;l</span></strong> og <strong><span class="g" data-g="landsmål">landsm&aring;l</span> &rarr; <span class="g" data-g="nynorsk">nynorsk</span></strong>. Begge er likestilte norske skriftspr&aring;k.</div>
               </div>
               <div class="expand-section">
                 <div class="expand-label">Samnorsk-eksperimentet</div>
-                <div class="expand-text">Fra 1930–1960-årene forsøkte myndighetene å slå <span class="g" data-g="bokmal">bokmål</span> og <span class="g" data-g="nynorsk">nynorsk</span> sammen til ett «<span class="g" data-g="samnorsk">samnorsk</span>». Reformene møtte massiv motstand — «Foreldreaksjonen» samlet 500 000 underskrifter og prosjektet ble gravlagt.</div>
+                <div class="expand-text">Myndighetene fors&oslash;kte &aring; sl&aring; bokm&aring;l og nynorsk sammen til ett <span class="g" data-g="samnorsk">&laquo;samnorsk&raquo;</span>. Reformene i <strong>1938 og 1959</strong> m&oslash;tte massiv folkelig motstand &mdash; 500 000 underskrifter mot.</div>
               </div>
             </div>
             <div>
               <div class="expand-section">
                 <div class="expand-label">I dag</div>
-                <div class="expand-text">Ca. 85–90 % bruker <span class="g" data-g="bokmal">bokmål</span>, mens ca. 10–15 % bruker <span class="g" data-g="nynorsk">nynorsk</span> — særlig på Vestlandet. <span class="g" data-g="mallov">Målloven</span> sikrer at statlig kommunikasjon bruker begge former. Alle elever lærer begge skriftspråk.</div>
+                <div class="expand-text">Ca. <strong>85&ndash;90 %</strong> bruker <span class="g" data-g="bokmål">bokm&aring;l</span>, ca. <strong>10&ndash;15 %</strong> bruker <span class="g" data-g="nynorsk">nynorsk</span>. <span class="g" data-g="mållov">M&aring;lloven</span> sikrer at statlig kommunikasjon bruker begge former.</div>
               </div>
               <div class="expand-section">
                 <div class="expand-label">Dialektenes stilling</div>
-                <div class="expand-text">Norge er unikt i Europa: <span class="g" data-g="dialekt">dialekter</span> brukes aktivt i TV, radio og politikk. Ingen dialekt ble noen gang kåret til «standard» — et direkte resultat av den langvarige språkstriden.</div>
+                <div class="expand-text">Norge er unikt i Europa: <span class="g" data-g="dialekt">dialekter</span> brukes aktivt i TV, radio og politikk. Ingen talm&aring;l ble noen gang k&aring;ret til &laquo;standard&raquo;.</div>
               </div>
             </div>
           </div>
-          <div class="expand-big-quote">Norsk finnes ikkje i éin form — norsk er alle formene til saman</div>
+          <div class="expand-big-quote">Norsk finnes ikkje i &eacute;in form &mdash; norsk er alle formene til saman</div>
           <div class="expand-facts">
-            <span class="fact-pill">Navnebytte 1929</span><span class="fact-pill">Samnorsk-reform 1938 & 1959</span><span class="fact-pill">500 000 mot samnorsk</span><span class="fact-pill">~15% nynorskbrukere i dag</span><span class="fact-pill">Målloven sikrer likestilling</span>
+            <span class="fact-pill">Navnebytte 1929</span><span class="fact-pill">Samnorsk-reform 1938 &amp; 1959</span><span class="fact-pill">500 000 mot samnorsk</span><span class="fact-pill">~15% nynorskbrukere i dag</span><span class="fact-pill">M&aring;lloven sikrer likestilling</span>
           </div>
         </div>
       </div>
@@ -580,164 +505,557 @@
 
   </div><!-- /timeline -->
 
-  <div class="rune-strip">ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ ᚷ ᚹ ᚺ ᚾ ᛁ ᛃ ᛇ ᛈ ᛉ ᛊ ᛏ ᛒ ᛖ ᛗ ᛚ ᛜ ᛞ ᛟ</div>
+  <div class="rune-strip">&#x16A0; &#x16A2; &#x16A6; &#x16A8; &#x16B1; &#x16B2; &#x16B7; &#x16B9; &#x16BA; &#x16BE; &#x16C1; &#x16C3; &#x16C7; &#x16C8; &#x16C9; &#x16CA; &#x16CF; &#x16D2; &#x16D6; &#x16D7; &#x16DA; &#x16DC; &#x16DE; &#x16DF;</div>
 
   <div class="legend">
-    <h3>Språklige epoker</h3>
+    <h3>Spr&aring;klige epoker</h3>
     <div class="legend-items">
       <div class="legend-item"><div class="legend-dot" style="border-color:#c07030;"></div>Urnordisk / Runetid</div>
-      <div class="legend-item"><div class="legend-dot" style="border-color:#90b060;"></div>Norrønt / Gammelnorsk</div>
+      <div class="legend-item"><div class="legend-dot" style="border-color:#90b060;"></div>Norr&oslash;nt / Gammelnorsk</div>
       <div class="legend-item"><div class="legend-dot" style="border-color:#7090c0;"></div>Mellomnorsk</div>
       <div class="legend-item"><div class="legend-dot" style="border-color:#c06060;"></div>Dansk-norsk</div>
       <div class="legend-item"><div class="legend-dot" style="border-color:#70b070;"></div>Nasjonal periode</div>
       <div class="legend-item"><div class="legend-dot" style="border-color:#c9962a;"></div>Moderne norsk</div>
     </div>
   </div>
+  <!-- ── OPPGAVER ── -->
+  <div class="quiz-section" id="quiz-section">
+    <div class="quiz-header">
+      <div class="ornament" style="font-size:1.3rem;margin-bottom:14px;">⸻ ✦ ⸻</div>
+      <h2 class="quiz-title">Oppgaver</h2>
+      <p class="quiz-sub">Test og utdyp din forståelse av norsk språkhistorie</p>
+    </div>
 
-</div>
+    <!-- REPETISJONSOPPGAVER -->
+    <div class="quiz-block">
+      <div class="quiz-block-label">Repetisjonsoppgaver</div>
+      <p class="quiz-block-desc">Klikk på spørsmålet for å avsløre svaret.</p>
 
-<!-- Glossary popover -->
-<div id="gloss-pop">
-  <span class="gp-close" id="gp-close">✕</span>
-  <div class="gp-term" id="gp-term"></div>
-  <div class="gp-def"  id="gp-def"></div>
+      <div class="q-item" onclick="toggleQ(this)">
+        <div class="q-question">
+          <span class="q-num">1</span>
+          <span>Hva kalles det eldste nordiske runealfabetet, og hvor mange tegn hadde det?</span>
+          <span class="q-arrow">▸</span>
+        </div>
+        <div class="q-answer">Den eldre futharken hadde <strong>24 runer</strong> og ble brukt fra ca. 200 til 800 e.kr. Den yngre futharken (vikingtid) hadde bare 16 runer — paradoksalt nok færre tegn for et mer utviklet språk.</div>
+      </div>
+
+      <div class="q-item" onclick="toggleQ(this)">
+        <div class="q-question">
+          <span class="q-num">2</span>
+          <span>Hva skjedde med norsk skriftspråk etter Svartedauden i 1349?</span>
+          <span class="q-arrow">▸</span>
+        </div>
+        <div class="q-answer">Svartedauden drepte anslagsvis 50–60 % av Norges befolkning. Kleresiet — de eneste som kunne lese og skrive — ble særlig hardt rammet. Skriftkulturen brøt i stor grad sammen, og den klassiske norrøne skrifttradisjonen ble aldri gjenreist. Det åpnet for sterk påvirkning fra dansk, tysk og engelsk.</div>
+      </div>
+
+      <div class="q-item" onclick="toggleQ(this)">
+        <div class="q-question">
+          <span class="q-num">3</span>
+          <span>Hvem var Ivar Aasen, og hva er hans viktigste bidrag til norsk språkhistorie?</span>
+          <span class="q-arrow">▸</span>
+        </div>
+        <div class="q-answer">Ivar Aasen (1813–1896) var en selvlært lingvist fra Ørsta i Sunnmøre. Han reiste rundt i norske bygder og kartla dialektene systematisk. På grunnlag av dette arbeidet skapte han <strong>landsmål</strong> — et nytt norsk skriftspråk basert på de levende dialektene, med gammelnorsk som ideal. Landsmål ble omdøpt til <strong>nynorsk</strong> i 1929.</div>
+      </div>
+
+      <div class="q-item" onclick="toggleQ(this)">
+        <div class="q-question">
+          <span class="q-num">4</span>
+          <span>Hva var forskjellen på Ivar Aasens og Knud Knudsens tilnærming til et norsk skriftspråk?</span>
+          <span class="q-arrow">▸</span>
+        </div>
+        <div class="q-answer"><strong>Aasen</strong> ville lage et helt nytt skriftspråk nedenfra — basert på dialektene og gammelnorsk, uavhengig av det dansk-norske. <strong>Knudsen</strong> ville reformere det eksisterende dansk-norske skriftspråket ovenfra — gradvis fornorske det ved å bytte ut danske ord og former med norske. Begge retningene lever videre i henholdsvis nynorsk og bokmål.</div>
+      </div>
+
+      <div class="q-item" onclick="toggleQ(this)">
+        <div class="q-question">
+          <span class="q-num">5</span>
+          <span>Hva het de to norske skriftspråkene før navnebyttet i 1929?</span>
+          <span class="q-arrow">▸</span>
+        </div>
+        <div class="q-answer">Før 1929 het skriftspråkene <strong>riksmål</strong> (nå bokmål) og <strong>landsmål</strong> (nå nynorsk). Stortinget vedtok navnebyttet for å markere at begge var likestilte, norske skriftspråk — ingen av dem var «riksdekkende» på bekostning av den andre.</div>
+      </div>
+
+      <div class="q-item" onclick="toggleQ(this)">
+        <div class="q-question">
+          <span class="q-num">6</span>
+          <span>Hva var «Samnorsk», og hvorfor mislyktes prosjektet?</span>
+          <span class="q-arrow">▸</span>
+        </div>
+        <div class="q-answer"><strong>Samnorsk</strong> var et statlig prosjekt (ca. 1930–1970) som ønsket å smelte bokmål og nynorsk til ett felles norsk skriftspråk. Rettskrivingsreformene av 1938 og 1959 nærmet de to formene hverandre. Prosjektet møtte imidlertid massiv folkelig motstand — «Foreldreaksjonen mot samnorsk» samlet over 500 000 underskrifter — og ble stille gravlagt.</div>
+      </div>
+
+      <div class="q-item" onclick="toggleQ(this)">
+        <div class="q-question">
+          <span class="q-num">7</span>
+          <span>Hvilken rolle spilte Hansaforbundet i norsk språkhistorie?</span>
+          <span class="q-arrow">▸</span>
+        </div>
+        <div class="q-answer">Hansaforbundets tyske kjøpmenn dominerte fiskehandelen i Bergen i over 300 år. Deres <strong>middelnedertyske</strong> språk påvirket norsk kraftig — hundrevis av hverdagsord ble lånt inn, særlig innen handel, håndverk og sjøfart. Ord som «handel», «betale», «arbeide» og «herlig» stammer herfra.</div>
+      </div>
+    </div>
+
+    <!-- REFLEKSJONSOPPGAVER -->
+    <div class="quiz-block">
+      <div class="quiz-block-label" style="background:rgba(45,74,45,0.25);border-color:rgba(112,176,112,0.25);color:#90c890;">Refleksjonsoppgaver</div>
+      <p class="quiz-block-desc">Disse har ikke ett riktig svar — bruk det du har lært til å tenke selvstendig.</p>
+
+      <div class="q-item q-reflect" onclick="toggleQ(this)">
+        <div class="q-question">
+          <span class="q-num" style="border-color:rgba(112,176,112,0.4);color:#80c080;">R1</span>
+          <span>Norsk er et av få land i verden med to likestilte skriftspråk. Er dette et styrke eller en svakhet — og for hvem?</span>
+          <span class="q-arrow">▸</span>
+        </div>
+        <div class="q-answer q-reflect-answer">
+          <div class="q-reflect-prompt">Mulige innfallsvinkler:</div>
+          <ul>
+            <li><strong>For nynorskbrukere:</strong> Likestillingen sikrer at minoritetsspråket ikke forsvinner. Målloven gir faktisk juridisk vern.</li>
+            <li><strong>For bokmålsbrukere:</strong> Dobbel rettskrivingslæring kan oppleves som en byrde i skolen, men gir også bredere språkforståelse.</li>
+            <li><strong>Kulturelt:</strong> To normer har bevart et mangfold som er unikt i Europa. Norges dialekttoleransekultur henger direkte sammen med at ingen norm «vant».</li>
+            <li><strong>Spørsmål å utforske:</strong> Finnes det andre land med lignende løsninger? Hva skjedde i land der ett språk «vant»?</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="q-item q-reflect" onclick="toggleQ(this)">
+        <div class="q-question">
+          <span class="q-num" style="border-color:rgba(112,176,112,0.4);color:#80c080;">R2</span>
+          <span>Svartedauden endret ikke bare befolkningstallet — den endret hele det norske skriftspråket. Hva sier dette om forholdet mellom samfunnskriser og språkutvikling?</span>
+          <span class="q-arrow">▸</span>
+        </div>
+        <div class="q-answer q-reflect-answer">
+          <div class="q-reflect-prompt">Mulige innfallsvinkler:</div>
+          <ul>
+            <li>Språk er ikke isolert fra samfunnet — det er bærerne av skriftkultur (kleresiet) som holder en skrifttradisjon i live.</li>
+            <li>Når de dør, dør tradisjonen. Det norske litterære «tomrommet» etter 1350 er ikke tilfeldig.</li>
+            <li>Krisene som fyller tomrommet (Hansaen, unionen med Danmark) former hva som erstatter det gamle.</li>
+            <li><strong>Parallell å tenke på:</strong> Hvilke moderne «kriser» — digitalisering, globalisering, kunstig intelligens — kan påvirke norsk språk i dag?</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="q-item q-reflect" onclick="toggleQ(this)">
+        <div class="q-question">
+          <span class="q-num" style="border-color:rgba(112,176,112,0.4);color:#80c080;">R3</span>
+          <span>Ivar Aasen lagde et skriftspråk nedenfra, fra dialektene. Knud Knudsen reformerte ovenfra. Hvilken tilnærming er mer demokratisk — og er demokrati det rette kriteriet for å velge skriftspråk?</span>
+          <span class="q-arrow">▸</span>
+        </div>
+        <div class="q-answer q-reflect-answer">
+          <div class="q-reflect-prompt">Mulige innfallsvinkler:</div>
+          <ul>
+            <li>Aasens metode løftet bondebefolkningens talemål til skriftlig status — demokratisk i den forstand at den inkluderte folk flest.</li>
+            <li>Knudsens metode bevarte en eksisterende litterær tradisjon og sikret kontinuitet med Holberg og Wergeland.</li>
+            <li>Er det demokratisk å skape et nytt kunstig skriftspråk som folk heller ikke snakker hjemme?</li>
+            <li><strong>Bredere perspektiv:</strong> Hvem «eier» egentlig et språk — staten, akademia, folket, eller historien?</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="q-item q-reflect" onclick="toggleQ(this)">
+        <div class="q-question">
+          <span class="q-num" style="border-color:rgba(112,176,112,0.4);color:#80c080;">R4</span>
+          <span>Grunnloven av 1814 ble skrevet på dansk, ikke norsk. Hva forteller dette om forholdet mellom nasjonal frihet og kulturell frigjøring?</span>
+          <span class="q-arrow">▸</span>
+        </div>
+        <div class="q-answer q-reflect-answer">
+          <div class="q-reflect-prompt">Mulige innfallsvinkler:</div>
+          <ul>
+            <li>Politisk selvstendighet og kulturell selvstendighet er ikke det samme — og oppnås ikke alltid samtidig.</li>
+            <li>Embetsmennene som skrev Grunnloven var kulturelt danske selv om de var politisk norske. 400 år med dansk skriftspråk satt dypt.</li>
+            <li>Det tok tiår etter 1814 før spørsmålet om et norsk skriftspråk virkelig ble presserende — som om den politiske friheten måtte komme først.</li>
+            <li><strong>Parallell å tenke på:</strong> Finnes det eksempler fra andre land der politisk frigjøring kom lenge før kulturell og språklig frigjøring?</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- DISCLAIMER -->
+    <div class="ai-disclaimer">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;opacity:0.6;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <div>
+        <strong>KI-generert innhold.</strong> Denne siden — inkludert tidslinje, forklaringer, begrepsdefinisjoner og oppgaver — er produsert av en kunstig intelligens (Claude, Anthropic). Innholdet er ment som et pedagogisk utgangspunkt og kan inneholde forenklinger eller unøyaktigheter. Vi anbefaler å bruke primærkilder og faglitteratur for akademisk arbeid.
+      </div>
+    </div>
+
+  </div><!-- /quiz-section -->
+
 </div>
 
 <script>
-/* ── GLOSSARY ── */
-const GLOSS = {
-  urnordisk:          { term:'Urnordisk',             def:'Den tidligste formen av nordisk språk (ca. 200–800 e.kr.), felles for alle germanske folk i Skandinavia. Forløperen til alle moderne nordiske språk — norsk, svensk, dansk, islandsk og færøysk.' },
-  futhark:            { term:'Futhark',               def:'Det norrøne runealfabetet. Kalles futhark etter de seks første runene: ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ. Den eldre futharken (200–800 e.kr.) hadde 24 tegn; den yngre (vikingtid) bare 16.' },
-  gallehus:           { term:'Gallehus-hornene',      def:'To gullhorn funnet i Gallehus, Danmark (1639 og 1734), med en av de eldste kjente runeinnskriftene fra Skandinavia. Hornene ble stjålet og smeltet ned i 1802, men innskriften er bevart i avskrift.' },
-  latinsk:            { term:'Latinsk alfabet',       def:'Skriftsystemet fra det romerske riket, basert på 23 (etter hvert 26) bokstaver. Innført i Skandinavia med kristendommen rundt år 1000, og har siden vært det dominerende skriftsystemet i norsk.' },
-  norrønt:            { term:'Norrønt',               def:'Gammelnordisk — det felles nordiske skrift- og talespråket fra ca. 800 til ca. 1350. Forfedrespråket til norsk, islandsk, færøysk, dansk og svensk. Rikt bøyningsspråk med fire kasus og tre kjønn.' },
-  bøyning:            { term:'Bøyningsspråk',         def:'Språk der ordenes grammatiske funksjon uttrykkes gjennom endelser på selve ordet — ikke bare gjennom ordstilling. Norrønt hadde fire kasus; moderne norsk har nesten ingen kasusbøying igjen.' },
-  kasus:              { term:'Kasus',                 def:'Grammatisk kategori som angir et ords rolle i setningen (subjekt, objekt, eieform) gjennom endringer i selve ordet. Norrønt hadde nominativ, akkusativ, dativ og genitiv. Moderne norsk beholder knapt annet enn genitiv (Peters bil).' },
-  rus:                { term:'Rus-staten',            def:'Det tidlige riket grunnlagt av norrøne varjager (vikinger) langs elvene i Russland og Ukraina. Kiev Rus (ca. 880–1240) ga trolig opphav til selve navnet «Russland». Norrønt var handelsspråket langs disse rutene.' },
-  hagiasofía:         { term:'Hagia Sofia',           def:'Verdens største kirke/moské i Konstantinopel (Istanbul), bygd på 500-tallet. Norrøne leiesoldater (varjager) ristet runer inn i marmorgelenderet — et levende bevis på vikingenes geografiske rekkevidde.' },
-  runesten:           { term:'Runesten',              def:'Reist stein med runeinnskrift, vanligvis til minne om avdøde. Reist i Skandinavia ca. 400–1100 e.kr. Over 3000 er bevart, flest i Sverige. Viktige historiske kilder om vikingtidas samfunn og slektskap.' },
-  sagaer:             { term:'Sagaer',                def:'Norrøn prosa­litteratur fra Island og Norge, særlig på 1200–1300-tallet. Omhandler konger (kongesagaer), islandske familier (ættesagaer) og mytiske helter. Regnes som en av verdens mest særegne litterære tradisjoner.' },
-  snorre:             { term:'Snorre Sturlason',      def:'Islandsk historieskriver og politiker (1179–1241). Forfatter av Heimskringla (norske kongesagaer) og Edda (norrøn mytologi). Regnes som en av middelalderens fremste prosaforfattere.' },
-  kloster:            { term:'Kloster',               def:'Religiøst fellesskap der munker eller nonner levde etter strenge regler. I middelalderen var klostre Europas viktigste lærdoms- og skrivesentre — de kopierte bøker og bevarte kunnskap.' },
-  erkebiskop:         { term:'Erkebiskop',            def:'Øverste biskop i en kirkeprovins. Nidaros (Trondheim) ble norsk erkebispesete i 1152 og var Nordens viktigste kirkelige senter i middelalderen — og dermed et av de ledende skriftsentrene.' },
-  nidarosdomen:       { term:'Nidarosdomen',          def:'Norges nasjonalhelligdom i Trondheim, bygd over graven til Olav den Hellige (død 1030). Det viktigste valfartsstedet i Nord-Europa i middelalderen. Oppføringen startet ca. 1070 og pågikk i over 200 år.' },
-  kleresiet:          { term:'Kleresiet',             def:'Den lærde geistligheten — prester, munker og kirkens tjenestemenn. I middelalderen var de nærmest eneansvarlige for skriftlig kultur: de drev skoler og skrev ned lover, krøniker og religiøse tekster.' },
-  mellomnorsk:        { term:'Mellomnorsk',           def:'Overgangsfasen i norsk språkhistorie (ca. 1350–1550), mellom gammelnorsk og nyere tid. Preget av sammenbrudd i skrifttradisjonene etter svartedauden og sterk påvirkning fra lavtysk og etter hvert dansk.' },
-  svartedauden:       { term:'Svartedauden',          def:'Pestepidemi som rammet Europa 1347–1353, forårsaket av bakterien Yersinia pestis. I Norge ankom den Bergen i 1349 og drepte anslagsvis 50–60 % av befolkningen — den verste demografiske katastrofen i norsk historie.' },
-  hansa:              { term:'Hansaforbundet',        def:'Handelsforbund av nordtyske kjøpmannsbyer (ca. 1241–1669). Dominerte handelen i Nord-Europa. I Bergen kontrollerte de fiskehandelen fra Bryggen. Deres middelnedertyske språk påvirket norsk kraftig.' },
-  mnd:                { term:'Middelnedertysk',       def:'Varianten av tysk brukt av Hansaforbundets kjøpmenn (ca. 1100–1600). Kraftig påvirket norsk, dansk og svensk. Norske ord som «vindu», «arbeide» og «handle» stammer herfra.' },
-  kalmarunionen:      { term:'Kalmarunionen / dansk union', def:'Politisk union mellom Danmark, Norge og Sverige (1397–1523). Sverige trakk seg ut i 1523, men Danmark–Norge fortsatte frem til 1814. I unionen dominerte Danmark politisk og kulturelt.' },
-  rikssprak:          { term:'Riksspråk',             def:'Det offisielle språket i et rike — brukt i lover, forvaltning, kirke og utdanning. I Danmark–Norge var dansk riksspråket fra ca. 1400-tallet og fortrengte norsk fra skriftlig bruk.' },
-  dialekt:            { term:'Dialekt',               def:'En regional eller lokal variant av et språk med egne lydtrekk, ord og grammatikk. Norsk er kjent for sitt store dialektmangfold. I dansketiden overlevde norsk nettopp fordi dialektene ble bevart i muntlig tradisjon.' },
-  embetsmann:         { term:'Embetsmann',            def:'Statsansatt i høyere stilling — dommer, prest, militæroffiser. I dansketiden leste og skrev embetsmennene dansk, mens bondebefolkningen snakket norske dialekter. 1814-grunnloven var i stor grad skrevet av embetsmenn.' },
-  reformasjon:        { term:'Reformasjonen',         def:'Religiøs bevegelse som delte kristenheten i katolikker og protestanter fra 1517. I Danmark–Norge innførte Christian III lutherdommen i 1537. Kirken gikk fra latin til folkespråk — men det «folkespråket» ble dansk, ikke norsk.' },
-  dansknorsk:         { term:'Dansk-norsk',           def:'Blandingsspråket som bybefolkningen og embetsmennene i Norge utviklet: skriftlig dansk uttalt med norsk intonasjon og aksent. Grunnlaget for det som ble riksmål og senere bokmål.' },
-  holberg:            { term:'Ludvig Holberg',        def:'Norsk-dansk forfatter og filosof (1684–1754), født i Bergen. Regnes som grunnleggeren av dansk og norsk litteratur. Skrev komedier og essayer på dansk, men med norsk bakgrunn — et symbol på det kulturelle mellomrommet.' },
-  grunnloven:         { term:'Grunnloven',            def:'Norges konstitusjon, vedtatt 17. mai 1814 på Eidsvoll. En av verdens eldste grunnlover ennå i bruk. Skrevet på dansk — et paradoks som drev frem debatten om et norsk skriftspråk.' },
-  kielfreden:         { term:'Kielfreden',            def:'Fredsavtale 14. januar 1814 der Danmark måtte avstå Norge til Sverige etter Napoleonskrigene. Ga nordmennene et historisk vindu til å vedta sin egen grunnlov — og innledet frigjøringen.' },
-  romantisknasjonalisme: { term:'Romantisk nasjonalisme', def:'Europeisk kulturstrøm på 1800-tallet som knyttet nasjonal identitet til folkekulturen — eventyr, sagn, musikk og særlig språk. I Norge drev den frem både nynorsk og fornorsking av riksmålet.' },
-  asbjornsen:         { term:'Asbjørnsen & Moe',      def:'Peter Christen Asbjørnsen (1812–1885) og Jørgen Moe (1813–1882) samlet norske folkeeventyr og utgav dem 1841–44. Inspirert av brødrene Grimm. Eventyrene ble et kulturelt symbol på norsk egenart.' },
-  wergeland:          { term:'Henrik Wergeland',      def:'Norsk dikter og nasjonalromantiker (1808–1845). Sterk forkjemper for et folkelig, norsk-pregat skriftspråk fri for dansk innflytelse — symbolet på det «norske» i kulturkampen mot Welhavens mer internasjonale linje.' },
-  welhaven:           { term:'Johan Sebastian Welhaven', def:'Norsk dikter og kritiker (1807–1873). Representerte en europeisk, estetisk linje og mente det dansk-norske skriftspråket burde beholdes og foredles — ikke kastes ut til fordel for et nytt folkespråk.' },
-  aasen:              { term:'Ivar Aasen',            def:'Selvlært norsk lingvist (1813–1896) fra Ørsta. Kartla norske dialekter og skapte landsmål (nynorsk) basert på de levende dialektene med gammelnorsk som ideal. Regnes som nynorskens far.' },
-  knudsen:            { term:'Knud Knudsen',          def:'Norsk skolemann og språkreformatør (1812–1895). Mente det rette var å fornorske det eksisterende dansk-norske skriftspråket gradvis. Hans arbeid la grunnlaget for riksmål og siden bokmål.' },
-  landsmaal:          { term:'Landsmål',              def:'Skriftspråket skapt av Ivar Aasen på 1850-tallet, basert på norske dialekter med gammelnorsk som ideal. Ble sidestilt med riksmål i 1885 og skiftet navn til nynorsk i 1929.' },
-  riksmal:            { term:'Riksmål',               def:'Den gradvis fornorskede varianten av dansk-norsk, utviklet på 1800-tallet. Skiftet navn til bokmål i 1929. Brukes i dag som betegnelse på den mer konservative varianten som ikke følger de offisielle bokmålsnormene.' },
-  bokmal:             { term:'Bokmål',                def:'Et av Norges to offisielle skriftspråk, med røtter i det dansk-norske skriftspråket. Kaltes riksmål til 1929. Brukes av ca. 85–90 % av nordmenn.' },
-  nynorsk:            { term:'Nynorsk',               def:'Et av Norges to offisielle skriftspråk, basert på norske dialekter og skapt av Ivar Aasen. Kaltes landsmål til 1929. Brukes av ca. 10–15 % av nordmenn, særlig på Vestlandet. Alle norske skoleelever lærer begge skriftspråk.' },
-  samnorsk:           { term:'Samnorsk',              def:'Politisk prosjekt (ca. 1930–1966) som ville slå bokmål og nynorsk sammen til ett norsk skriftspråk. Møtte massiv motstand — «Foreldreaksjonen mot samnorsk» samlet 500 000 underskrifter og prosjektet ble stille gravlagt.' },
-  mallov:             { term:'Målloven',              def:'Norsk lov som sikrer at statlige etater bruker begge offisielle skriftspråk. Kommuner kan velge bokmål, nynorsk eller «nøytral» status. Et av de viktigste juridiske virkemidlene for å bevare nynorskens stilling.' }
+const GLOSSARY = {
+  futhark:{term:"Futhark",def:"Navnet p&aring; de norrøne runealfabetene, avledet fra de seks første runene: <strong>F-U-Þ-A-R-K</strong>. Den <em>eldre futharken</em> har 24 runer (ca. 200–800 e.kr.), den <em>yngre futharken</em> har 16 (vikingalder)."},
+  urnordisk:{term:"Urnordisk",def:"Felles forfedrespråk til alle nordiske og mange germanske folk, brukt ca. 200–800 e.kr. Det eldste stadiet av nordisk vi kjenner gjennom runeinnskrifter — direkte opphav til norrønt."},
+  norrønt:{term:"Norrønt",def:"Fellesbetegnelse på det nordiske middelalder­språket, ca. 800–1350 e.kr. Forfar til norsk, islandsk, færøysk, dansk og svensk. Talt fra Island til Konstantinopel. Kalles også <em>gammelnordisk</em>."},
+  bøyningsspråk:{term:"Bøyningsspråk",def:"Et språk der ord endrer form (bøyes) for å vise grammatisk funksjon — kasus, kjønn, tall. Norrønt hadde fire kasus og tre grammatiske kjønn. Moderne norsk har forenklet dette drastisk."},
+  kasus:{term:"Kasus",def:"Grammatisk kategori som viser et ords funksjon i setningen. Norrønt hadde fire: <strong>nominativ</strong> (subjekt), <strong>akkusativ</strong> (objekt), <strong>dativ</strong> (indirekte obj.) og <strong>genitiv</strong> (eierforhold)."},
+  sagaer:{term:"Sagaer",def:"Norrøne prosafortellinger fra middelalderen (ca. 1100–1400). Dekker kongesagaer, ættsagaer og legendariske sagaer. Regnes som noe av verdens fremste middelalderlitteratur — psykologisk, realistisk, dramatisk."},
+  skaldekvad:{term:"Skaldekvad",def:"Dikt laget av <em>skalder</em> — hoffpoeter ved vikingtidens kongehoff. Streng versform med komplekse rim og kjenninger (billedlige omskrivninger). F.eks.: havet = «hvalenes vei»."},
+  landslov:{term:"Magnus Lagabøtes landslov",def:"Norges første landsomfattende lov (1274). Erstattet de regionale lagstinglovene og gjaldt hele riket. Skrevet på norrønt — et av de viktigste juridiske dokumentene i norsk historie."},
+  snorre:{term:"Snorre Sturlason",def:"Islandsk historieskriver og politiker (1179–1241). Forfattet <em>Heimskringla</em> (kongesagaer), <em>Snorre-Edda</em> (håndbok i skaldekunst) og mer. Regnes som vikingalderens fremste skriftlige kilde."},
+  erkebispe:{term:"Erkebispesete",def:"Sete for en erkebiskop — den høyeste kirkelige myndigheten i en kirkeprovins. Nidaros (Trondheim) ble norsk erkebispesete i 1152, med jurisdiksjon over Norge, Island, Grønland og de britiske øyer."},
+  svartedauden:{term:"Svartedauden",def:"Den katastrofale pestepidemi­en 1347–1353 som drepte ca. 1/3 av Europas befolkning. I Norge ankom den Bergen i 1349 og drepte ~50–60 % av befolkningen. Fikk enorme kulturelle og politiske følger."},
+  mellomnorsk:{term:"Mellomnorsk",def:"Overgangsstadiet i norsk språkhistorie ca. 1350–1550. Preget av sammenbrudd i den norske skrift­tradisjonen og sterk påvirkning fra dansk, middelnedertysk og engelsk. Brobygger mellom norrønt og dansk-norsk."},
+  kleresiet:{term:"Kleresiet",def:"Den lærde geistligheten — prester, munker og nonner med lese- og skriveferdigheter. I middelalderen var kleresiet nesten enerådende bærere av skriftkultur. Svartedauden ødela store deler av dette miljøet i Norge."},
+  union:{term:"Union",def:"Statsforbund under felles monark. Norge var i union med Danmark 1380–1814 og med Sverige 1814–1905. Begge unionene fikk stor innvirkning på norsk språk og nasjonal identitet."},
+  hansaen:{term:"Hansaforbundet",def:"Mektig forbund av nordtyske handelsbyer (ca. 1241–1669). I Bergen kontrollerte hanseatene fiskehandelen fra Bryggen i over 300 år. Deres middelnedertyske språk gav norsk hundrevis av lånord."},
+  middelnedertysk:{term:"Middelnedertysk",def:"Det nordtyske handelsspråket ca. 1100–1600, brukt av Hansaforbundet. Norsk arvet bl.a. ordene <em>handel</em>, <em>arbeid</em>, <em>betale</em>, <em>herlig</em>, <em>plass</em> og mange andre hverdagsord fra dette språket."},
+  riksspråk:{term:"Riksspråk",def:"Det offisielle, statsbærende skrift- og administrasjonsspråket. Dansk ble Norges riksspråk etter unionen i 1380 og forble det i all offisiell kommunikasjon i over 400 år."},
+  reformasjonen:{term:"Reformasjonen",def:"Den protestantiske kirkereformen på 1500-tallet, innledet av Martin Luther i 1517. I Danmark–Norge innført ved kongelig dekret i 1537. La grunnlaget for folkespråk i kirken og utdanning på morsmålet."},
+  dialekt:{term:"Dialekt",def:"En geografisk variant av et språk med egne lydformer, grammatikk og ordforråd. Norge har usedvanlig mange og levende dialekter som brukes i alle samfunnslag — et direkte resultat av at ingen norm ble påtvunget."},
+  embetsmenn:{term:"Embetsmenn",def:"Den øvre, statsbærende klassen av utdannede tjenestemenn — prester, jurister, militære og administratorer. I dansketiden var de kulturelt danske. Etter 1814 ble de pådrivere for norsk nasjonal identitet."},
+  holberg:{term:"Ludvig Holberg",def:"Norsk-dansk forfatter (1684–1754), grunnleggeren av det danske teater og norsk-dansk skjønn­litteratur. Født i Bergen, men skrev på dansk. Et symbol på den tospråklige kulturen i unionsperioden."},
+  grunnloven:{term:"Grunnloven",def:"Norges konstitusjon, vedtatt på Eidsvoll 17. mai 1814. En av verdens eldste grunnlover fortsatt i kraft. Paradoksalt nok skrevet på dansk — noe som ble en kraftig påminnelse om behovet for et norsk skriftspråk."},
+  kielfreden:{term:"Kielfreden",def:"Fredsavtalen av 14. januar 1814 der Danmark måtte avstå Norge til Sverige etter Napoleons-krigene. Utløste den norske selvstendighetsbevegelsen og Grunnloven i mai 1814."},
+  romantisknasjonalisme:{term:"Romantisk nasjonalisme",def:"Europeisk idéstrømning (ca. 1800–1870) der folk og nasjoner ble definert gjennom felles språk, historie, kultur og natur. I Norge: innsamling av eventyr, folkemusikk og dialekter som grunnlag for nasjonal identitet."},
+  wergeland:{term:"Henrik Wergeland",def:"Norsk lyriker og nasjonal-romantiker (1808–1845). Ivret for et folkelig, norsk-pregat skriftspråk og norsk uavhengighet fra dansk kulturinfluens. Regnes som Norges nasjonaldikter."},
+  welhaven:{term:"Johan S. Welhaven",def:"Norsk lyriker (1807–1873) og Wergelands litterære motstander. Mente Norge burde videreføre den dansk-norske litterære tradisjonen. Representerte det konservative, estetisk raffinerte synet i den store språkdebatten."},
+  ivaraasen:{term:"Ivar Aasen",def:"Norsk språkforsker og dikter (1813–1896) fra Ørsta. Selvlært, reiste Fastlands-Norge rundt og kartla dialektene. Skapte landsmål som motvekt til det dansk-dominerte riksmålet — et skriftspråk nedenfra."},
+  landsmål:{term:"Landsmål",def:"Skriftspråket Ivar Aasen konstruerte på 1850-tallet, basert på norske dialekter og gammelnorsk. Offisielt sidestilt med riksmål i 1885. Omdøpt til <strong>nynorsk</strong> i 1929."},
+  riksmål:{term:"Riksmål",def:"Det fornorskede danske skriftspråket, utviklet etter Knud Knudsens prinsipper fra midten av 1800-tallet. Omdøpt til <strong>bokmål</strong> i 1929. Riksmål brukes fortsatt som betegnelse på den konservative varianten av bokmål."},
+  knudsen:{term:"Knud Knudsen",def:"Norsk skolemann og språkreformator (1812–1895). Gikk inn for å fornorske det eksisterende dansk-norske skriftspråket gradvis — tilpasse det norsk uttale og ordforråd — fremfor å lage et helt nytt språk."},
+  lingvist:{term:"Lingvist",def:"En person som studerer språk vitenskapelig — strukturer, historisk utvikling og slektskap mellom språk. Ivar Aasen var selvlært lingvist og la grunnlaget for norsk <em>dialektologi</em> (vitenskapelig studium av dialekter)."},
+  latinsk:{term:"Latinsk alfabet",def:"Skriftsystemet utviklet i Roma, i dag verdens mest brukte alfabet. Ble innført i Norden med kristendommen ca. 1000 e.kr. og erstattet gradvis runeskriften for de fleste skriftlige formål."},
+  etruskisk:{term:"Etruskisk",def:"Skriftsystemet til etruskerne i Mellom-Italia (ca. 700–100 f.kr.), avledet fra gresk. Noen forskere mener runeskriften kan spores via etruskisk eller tidlig italisk alfabet — men opprinnelsen er fortsatt omdiskutert."},
+  formelaktig:{term:"Formelaktig",def:"En tekst med fast, gjentakende struktur. Tidlige runeinnskrifter fulgte faste mønstre: «X ristet disse runene», «Guder beskytt dette». Formler gjorde teksten lettere å forstå og ga den magisk kraft."},
+  bokmål:{term:"Bokmål",def:"Norges dominerende skriftspråk, brukt av ca. 85–90 % av befolkningen. Utviklet fra det dansk-norske skriftspråket. Fikk navnet «bokmål» i 1929. Finnes i konservativ (<em>riksmål</em>) og mer radikal variant."},
+  nynorsk:{term:"Nynorsk",def:"Norges andre offisielle skriftspråk, brukt av ca. 10–15 %. Bygger på norske dialekter, konstruert av Ivar Aasen på 1850-tallet som landsmål. Omdøpt til nynorsk i 1929. Sterkest på Vestlandet og i Fjord-Norge."},
+  samnorsk:{term:"Samnorsk",def:"Politisk prosjekt (ca. 1930–1970) der staten ønsket å smelte bokmål og nynorsk til ett felles norsk skriftspråk. Rettskrivningsreformene av 1938 og 1959 nærmet språkene hverandre, men massiv folkemotstand gravla prosjektet."},
+  mållov:{term:"Målloven",def:"Norsk lov (gjeldende fra 1930, revidert 2021) som regulerer bruken av bokmål og nynorsk i offentlig forvaltning. Statlige organer skal bruke begge skriftspråk, og borgere har rett til svar på sin målform."}
 };
 
-/* ── CARD EXPAND ── */
+// Panel toggle
 let openId = null;
-
-function toggleCard(id, side) {
+function toggle(id, side) {
   const panel = document.getElementById('panel-' + id);
   const era   = panel.closest('.era');
   const card  = era.querySelector('.era-' + side + ' .card');
-
   if (openId === id) {
-    panel.classList.remove('open');
-    card.classList.remove('active');
-    openId = null;
+    panel.classList.remove('open'); card.classList.remove('active'); openId = null;
   } else {
     if (openId) {
       const prev = document.getElementById('panel-' + openId);
-      if (prev) {
-        prev.classList.remove('open');
-        prev.closest('.era').querySelectorAll('.card').forEach(c => c.classList.remove('active'));
-      }
+      if (prev) { prev.classList.remove('open'); prev.closest('.era').querySelectorAll('.card').forEach(c=>c.classList.remove('active')); }
     }
-    panel.classList.add('open');
-    card.classList.add('active');
-    openId = id;
-    setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 60);
+    panel.classList.add('open'); card.classList.add('active'); openId = id;
+    setTimeout(() => panel.scrollIntoView({behavior:'smooth',block:'nearest'}), 60);
   }
 }
 
-/* ── GLOSSARY POPOVER ── */
-const pop      = document.getElementById('gloss-pop');
-const popTerm  = document.getElementById('gp-term');
-const popDef   = document.getElementById('gp-def');
-const popClose = document.getElementById('gp-close');
-let activeG    = null;
+// Glossary popup
+const popup = document.getElementById('gloss-popup');
+const pTerm = document.getElementById('gloss-term');
+const pDef  = document.getElementById('gloss-def');
+let activeGloss = null;
 
-function positionPop(el) {
-  const rect = el.getBoundingClientRect();
-  const pw   = pop.offsetWidth  || 290;
-  const ph   = pop.offsetHeight || 120;
-  const margin = 12;
-  const vw   = window.innerWidth;
-  const vh   = window.innerHeight;
-
-  let left = rect.left + rect.width / 2 - pw / 2;
-  let top  = rect.bottom + 12;
-
-  if (top + ph + margin > vh) top = rect.top - ph - 12;
-  left = Math.max(margin, Math.min(left, vw - pw - margin));
-  top  = Math.max(margin, top);
-
-  pop.style.left = left + 'px';
-  pop.style.top  = top  + 'px';
-}
-
-function openGloss(el) {
-  const data = GLOSS[el.dataset.g];
+function showGloss(el) {
+  const data = GLOSSARY[el.dataset.g];
   if (!data) return;
+  if (activeGloss) activeGloss.classList.remove('active');
+  el.classList.add('active');
+  activeGloss = el;
+  pTerm.innerHTML = data.term;
+  pDef.innerHTML  = data.def;
+  popup.style.display = 'block';
+  popup.style.animation = 'none';
+  popup.offsetHeight; // reflow
+  popup.style.animation = '';
 
-  if (activeG && activeG !== el) activeG.classList.remove('g-active');
-  activeG = el;
-  el.classList.add('g-active');
+  const rect = el.getBoundingClientRect();
+  const pw   = popup.offsetWidth || 300;
+  const ph   = popup.offsetHeight || 120;
+  let left = rect.left + rect.width/2 - pw/2;
+  left = Math.max(8, Math.min(left, window.innerWidth - pw - 8));
+  const topAbove = rect.top + window.scrollY - ph - 14;
+  const topBelow = rect.bottom + window.scrollY + 10;
+  const top = (rect.top > ph + 20) ? topAbove : topBelow;
+  popup.style.left = left + 'px';
+  popup.style.top  = top + 'px';
 
-  popTerm.textContent = data.term;
-  popDef.textContent  = data.def;
-
-  pop.style.left = '-9999px';
-  pop.classList.add('visible');
-  requestAnimationFrame(() => positionPop(el));
+  const arrowCenter = rect.left + rect.width/2 - left;
+  const clampedArrow = Math.max(16, Math.min(arrowCenter, pw - 16));
+  popup.querySelector('.gloss-arrow').style.left       = clampedArrow + 'px';
+  popup.querySelector('.gloss-arrow-inner').style.left = clampedArrow + 'px';
+  popup.classList.add('visible');
 }
 
-function closeGloss() {
-  pop.classList.remove('visible');
-  if (activeG) { activeG.classList.remove('g-active'); activeG = null; }
+function hideGloss() {
+  popup.classList.remove('visible');
+  popup.style.display = 'none';
+  if (activeGloss) { activeGloss.classList.remove('active'); activeGloss = null; }
 }
 
-document.addEventListener('click', e => {
-  // Stop card-click from bubbling when clicking a glossary term inside a card
-  const g = e.target.closest('.g[data-g]');
-  if (g) {
-    e.stopPropagation();
-    (activeG === g && pop.classList.contains('visible')) ? closeGloss() : openGloss(g);
-    return;
-  }
-  if (!pop.contains(e.target)) closeGloss();
+document.addEventListener('click', (e) => {
+  const g = e.target.closest('.g');
+  if (g) { e.stopPropagation(); if (g === activeGloss) { hideGloss(); return; } showGloss(g); return; }
+  if (!popup.contains(e.target)) hideGloss();
 });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') hideGloss(); });
 
-popClose.addEventListener('click', e => { e.stopPropagation(); closeGloss(); });
+function toggleQ(el) {
+  el.classList.toggle('open');
+}
 
-window.addEventListener('scroll', () => { if (activeG && pop.classList.contains('visible')) positionPop(activeG); }, { passive: true });
-window.addEventListener('resize', () => { if (activeG && pop.classList.contains('visible')) positionPop(activeG); });
+
+/* ── TASKS ── */
+function checkRepetition(qNum, correct) {
+  const radios = document.querySelectorAll(`input[name="rep${qNum}"]`);
+  let chosen = null;
+  radios.forEach(r => { if (r.checked) chosen = r.value; });
+  const fb = document.getElementById(`rep-fb-${qNum}`);
+  if (!chosen) { fb.textContent = 'Velg et svar.'; fb.className = 'task-feedback neutral'; return; }
+  if (chosen === correct) {
+    fb.textContent = '✓ Riktig!';
+    fb.className = 'task-feedback correct';
+  } else {
+    fb.textContent = '✗ Ikke helt — prøv igjen.';
+    fb.className = 'task-feedback wrong';
+  }
+}
+
+function checkReflection(id) {
+  const ta = document.getElementById(id);
+  const fb = document.getElementById(id + '-fb');
+  const words = ta.value.trim().split(/\s+/).filter(Boolean).length;
+  if (words < 20) {
+    fb.textContent = `Skriv litt mer — du har ${words} ord (minst 20 anbefalt).`;
+    fb.className = 'task-feedback neutral';
+  } else {
+    fb.textContent = `✓ Godt svar! (${words} ord)`;
+    fb.className = 'task-feedback correct';
+  }
+}
 </script>
+
+<!-- ── TASKS SECTION ── -->
+<section class="tasks-section" id="tasks">
+  <div class="tasks-inner">
+
+    <div class="tasks-header">
+      <div class="tasks-ornament">⸻ ✦ ⸻</div>
+      <h2>Oppgaver</h2>
+      <p class="tasks-subtitle">Test deg selv og reflekter over norsk språkhistorie</p>
+    </div>
+
+    <!-- REPETISJON -->
+    <div class="task-block">
+      <div class="task-block-label">Repetisjonsoppgaver</div>
+
+      <div class="task-card">
+        <div class="task-q">1. Hva kalles de to ulike norske skriftspråkene som eksisterer side ved side i dag?</div>
+        <div class="task-options">
+          <label><input type="radio" name="rep1" value="a"> Riksmål og landsmål</label>
+          <label><input type="radio" name="rep1" value="b"> Bokmål og nynorsk</label>
+          <label><input type="radio" name="rep1" value="c"> Dansk-norsk og gammelnorsk</label>
+          <label><input type="radio" name="rep1" value="d"> Norrønt og mellomnorsk</label>
+        </div>
+        <button class="task-btn" onclick="checkRepetition(1,'b')">Sjekk svar</button>
+        <div class="task-feedback" id="rep-fb-1"></div>
+      </div>
+
+      <div class="task-card">
+        <div class="task-q">2. Hvilket år ankom svartedauden Bergen — og hvem ble særlig hardt rammet?</div>
+        <div class="task-options">
+          <label><input type="radio" name="rep2" value="a"> 1274 — handelsmennene</label>
+          <label><input type="radio" name="rep2" value="b"> 1380 — kongefamilien</label>
+          <label><input type="radio" name="rep2" value="c"> 1349 — kleresiet (den lærde geistligheten)</label>
+          <label><input type="radio" name="rep2" value="d"> 1537 — reformasjonsprestene</label>
+        </div>
+        <button class="task-btn" onclick="checkRepetition(2,'c')">Sjekk svar</button>
+        <div class="task-feedback" id="rep-fb-2"></div>
+      </div>
+
+      <div class="task-card">
+        <div class="task-q">3. Hvem skapte landsmål (nynorsk), og hva baserte han det på?</div>
+        <div class="task-options">
+          <label><input type="radio" name="rep3" value="a"> Knud Knudsen — basert på dansk skriftspråk</label>
+          <label><input type="radio" name="rep3" value="b"> Henrik Wergeland — basert på norrøne sagaer</label>
+          <label><input type="radio" name="rep3" value="c"> Ivar Aasen — basert på norske dialekter og gammelnorsk</label>
+          <label><input type="radio" name="rep3" value="d"> Ludvig Holberg — basert på dansk-norsk talemål</label>
+        </div>
+        <button class="task-btn" onclick="checkRepetition(3,'c')">Sjekk svar</button>
+        <div class="task-feedback" id="rep-fb-3"></div>
+      </div>
+
+      <div class="task-card">
+        <div class="task-q">4. Hva var den eldre futharken, og hvor mange tegn besto den av?</div>
+        <div class="task-options">
+          <label><input type="radio" name="rep4" value="a"> Et latinsk alfabet med 26 bokstaver</label>
+          <label><input type="radio" name="rep4" value="b"> Et runealfabet med 24 tegn, brukt ca. 200–800 e.kr.</label>
+          <label><input type="radio" name="rep4" value="c"> Et norrønt alfabet med 16 tegn fra vikingtiden</label>
+          <label><input type="radio" name="rep4" value="d"> Et gresk alfabet brukt i klostre fra middelalderen</label>
+        </div>
+        <button class="task-btn" onclick="checkRepetition(4,'b')">Sjekk svar</button>
+        <div class="task-feedback" id="rep-fb-4"></div>
+      </div>
+
+      <div class="task-card">
+        <div class="task-q">5. Hva skjedde med det norske riksspråket under dansketiden (1380–1814)?</div>
+        <div class="task-options">
+          <label><input type="radio" name="rep5" value="a"> Norsk ble styrket som offisielt skriftspråk</label>
+          <label><input type="radio" name="rep5" value="b"> Dansk ble enerådende skriftspråk, mens norsk overlevde i dialektene</label>
+          <label><input type="radio" name="rep5" value="c"> Latin erstattet alle germanske språk i Norden</label>
+          <label><input type="radio" name="rep5" value="d"> Norrønt ble innført på nytt av reformasjonsprestene</label>
+        </div>
+        <button class="task-btn" onclick="checkRepetition(5,'b')">Sjekk svar</button>
+        <div class="task-feedback" id="rep-fb-5"></div>
+      </div>
+
+      <div class="task-card">
+        <div class="task-q">6. Hva var «Samnorsk»-prosjektet, og hva ble utfallet?</div>
+        <div class="task-options">
+          <label><input type="radio" name="rep6" value="a"> Et forsøk på å gjeninnføre norrønt — lyktes delvis på Vestlandet</label>
+          <label><input type="radio" name="rep6" value="b"> Et statlig prosjekt for å slå bokmål og nynorsk sammen — mislyktes etter massiv motstand</label>
+          <label><input type="radio" name="rep6" value="c"> En lov som forbød dialektbruk i skolen — ble opphevet i 1980</label>
+          <label><input type="radio" name="rep6" value="d"> En avtale mellom Norge og Danmark om felles skriftspråk — vedtatt i 1929</label>
+        </div>
+        <button class="task-btn" onclick="checkRepetition(6,'b')">Sjekk svar</button>
+        <div class="task-feedback" id="rep-fb-6"></div>
+      </div>
+
+    </div><!-- /repetisjon -->
+
+    <!-- REFLEKSJON -->
+    <div class="task-block">
+      <div class="task-block-label">Refleksjonsoppgaver</div>
+      <p class="task-block-intro">Disse oppgavene har ikke ett riktig svar — skriv minst 20 ord og tenk deg godt om.</p>
+
+      <div class="task-card task-card-reflect">
+        <div class="task-q">7. Svartedauden brøt ned den norske skriftkulturen fullstendig. Kan en ytre katastrofe også <em>forme</em> et språk på lang sikt — og hva sier det om forholdet mellom samfunn og språk?</div>
+        <textarea id="ref1" class="task-textarea" placeholder="Skriv svaret ditt her …"></textarea>
+        <button class="task-btn" onclick="checkReflection('ref1')">Sjekk lengde</button>
+        <div class="task-feedback" id="ref1-fb"></div>
+      </div>
+
+      <div class="task-card task-card-reflect">
+        <div class="task-q">8. Ivar Aasen og Knud Knudsen valgte to helt ulike veier mot et norsk skriftspråk. Hvilken strategi — bygge nytt nedenfra eller reformere ovenfra — synes du er mest fornuftig, og hvorfor?</div>
+        <textarea id="ref2" class="task-textarea" placeholder="Skriv svaret ditt her …"></textarea>
+        <button class="task-btn" onclick="checkReflection('ref2')">Sjekk lengde</button>
+        <div class="task-feedback" id="ref2-fb"></div>
+      </div>
+
+      <div class="task-card task-card-reflect">
+        <div class="task-q">9. Norge er det eneste landet i Europa der dialekter brukes aktivt i TV, politikk og næringsliv uten å regnes som uformelt. Hva tror du er grunnen til dette, og ser du det som en styrke eller en utfordring?</div>
+        <textarea id="ref3" class="task-textarea" placeholder="Skriv svaret ditt her …"></textarea>
+        <button class="task-btn" onclick="checkReflection('ref3')">Sjekk lengde</button>
+        <div class="task-feedback" id="ref3-fb"></div>
+      </div>
+
+      <div class="task-card task-card-reflect">
+        <div class="task-q">10. Grunnloven av 1814 — en erklæring om norsk selvstendighet — ble skrevet på dansk. Hva forteller dette paradokset oss om forholdet mellom politisk frihet og kulturell frigjøring?</div>
+        <textarea id="ref4" class="task-textarea" placeholder="Skriv svaret ditt her …"></textarea>
+        <button class="task-btn" onclick="checkReflection('ref4')">Sjekk lengde</button>
+        <div class="task-feedback" id="ref4-fb"></div>
+      </div>
+
+    </div><!-- /refleksjon -->
+
+    <!-- DISCLAIMER -->
+    <div class="ai-disclaimer">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;opacity:.7"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span><strong>KI-generert innhold:</strong> Denne ressursen — inkludert tidslinje, forklaringer, begrepsdefinisjoner og oppgaver — er produsert av en kunstig intelligens (Claude, Anthropic). Innholdet er ment som et utgangspunkt for læring og kan inneholde unøyaktigheter. Vi anbefaler å supplere med fagbøker, lærervurdering og primærkilder.</span>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .tasks-section {
+    background: linear-gradient(to bottom, var(--ink), #110900);
+    border-top: 1px solid rgba(201,150,42,.18);
+    padding: 70px 20px 80px;
+  }
+  .tasks-inner { max-width: 860px; margin: 0 auto; }
+
+  .tasks-header { text-align: center; margin-bottom: 50px; }
+  .tasks-ornament { color: var(--gold); font-size: 1.4rem; letter-spacing: .3em; margin-bottom: 12px; opacity: .7; }
+  .tasks-header h2 { font-family: 'Cinzel', serif; font-size: clamp(1.6rem,4vw,2.6rem); font-weight: 900; color: var(--aged); letter-spacing: .05em; }
+  .tasks-subtitle { font-style: italic; font-size: 1.1rem; color: #7a6040; margin-top: 8px; }
+
+  .task-block { margin-bottom: 50px; }
+  .task-block-label {
+    font-family: 'Cinzel', serif; font-size: .7rem; font-weight: 700;
+    letter-spacing: .3em; text-transform: uppercase; color: var(--gold); opacity: .65;
+    margin-bottom: 6px; padding-bottom: 10px;
+    border-bottom: 1px solid rgba(201,150,42,.15);
+    margin-bottom: 22px;
+  }
+  .task-block-intro { font-style: italic; font-size: .92rem; color: #7a6040; margin-bottom: 20px; }
+
+  .task-card {
+    background: rgba(245,232,200,.04);
+    border: 1px solid rgba(201,150,42,.13);
+    border-radius: 8px;
+    padding: 24px 28px;
+    margin-bottom: 16px;
+    transition: border-color .2s;
+  }
+  .task-card:hover { border-color: rgba(201,150,42,.25); }
+  .task-card-reflect { border-left: 3px solid rgba(201,150,42,.3); }
+
+  .task-q {
+    font-size: 1rem; color: var(--parchment); line-height: 1.7;
+    margin-bottom: 16px; font-style: normal;
+  }
+  .task-q em { color: #e8c878; font-style: italic; }
+
+  .task-options { display: flex; flex-direction: column; gap: 9px; margin-bottom: 18px; }
+  .task-options label {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: .95rem; color: #c0a878; line-height: 1.5;
+    cursor: pointer; padding: 8px 12px;
+    border: 1px solid transparent; border-radius: 5px;
+    transition: background .15s, border-color .15s;
+  }
+  .task-options label:hover { background: rgba(245,232,200,.06); border-color: rgba(201,150,42,.2); }
+  .task-options input[type="radio"] { margin-top: 3px; accent-color: var(--gold); flex-shrink: 0; }
+
+  .task-textarea {
+    width: 100%; min-height: 110px; resize: vertical;
+    background: rgba(0,0,0,.3); border: 1px solid rgba(201,150,42,.2);
+    border-radius: 5px; padding: 12px 14px;
+    font-family: 'EB Garamond', serif; font-size: .97rem;
+    color: #d4b882; line-height: 1.6;
+    transition: border-color .2s;
+    margin-bottom: 14px;
+    display: block;
+  }
+  .task-textarea:focus { outline: none; border-color: rgba(201,150,42,.5); background: rgba(0,0,0,.4); }
+  .task-textarea::placeholder { color: #5a4020; }
+
+  .task-btn {
+    font-family: 'Cinzel', serif; font-size: .72rem; font-weight: 700;
+    letter-spacing: .15em; text-transform: uppercase;
+    color: var(--gold); background: transparent;
+    border: 1px solid rgba(201,150,42,.35); border-radius: 4px;
+    padding: 8px 20px; cursor: pointer;
+    transition: background .2s, border-color .2s, color .2s;
+  }
+  .task-btn:hover { background: rgba(201,150,42,.1); border-color: rgba(201,150,42,.6); }
+
+  .task-feedback {
+    font-size: .9rem; margin-top: 10px; min-height: 1.2em;
+    font-style: italic; transition: color .2s;
+  }
+  .task-feedback.correct { color: #80c878; }
+  .task-feedback.wrong   { color: #c87060; }
+  .task-feedback.neutral { color: #a89060; }
+
+  /* AI Disclaimer */
+  .ai-disclaimer {
+    display: flex; gap: 12px; align-items: flex-start;
+    margin-top: 50px; padding: 18px 22px;
+    background: rgba(245,232,200,.04);
+    border: 1px solid rgba(201,150,42,.15);
+    border-left: 3px solid rgba(201,150,42,.35);
+    border-radius: 6px;
+    font-size: .87rem; color: #7a6040; line-height: 1.65;
+  }
+  .ai-disclaimer strong { color: #a89060; }
+
+  @media (max-width: 600px) {
+    .task-card { padding: 18px 16px; }
+    .tasks-section { padding: 50px 16px 60px; }
+  }
+</style>
 </body>
 </html>
