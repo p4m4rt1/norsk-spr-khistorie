@@ -83,6 +83,10 @@
   .era-danish .era-dot{border-color:#6a3a3a;}.era-danish .era-year{color:#c06060;}
   .era-1814 .era-dot{border-color:var(--forest);background:#0a1a0a;}.era-1814 .era-year{color:#70b070;}.era-1814 .era-title{color:#a0e0a0;}
   .era-modern .era-dot{border-color:var(--gold);background:#1a1000;box-shadow:0 0 8px rgba(201,150,42,.3);}.era-modern .era-year{color:var(--gold);}
+  .era-samisk .era-dot{border-color:#5a8a7a;background:#051510;}.era-samisk .era-year{color:#70c0a8;}.era-samisk .era-title{color:#a0e0cc;}
+  .era-minoritet .era-dot{border-color:#7a5a8a;background:#120a18;}.era-minoritet .era-year{color:#b080c8;}.era-minoritet .era-title{color:#d0a0e8;}
+  .era-engelsk .era-dot{border-color:#4a6a9a;background:#040c1a;box-shadow:0 0 8px rgba(100,160,255,.2);}.era-engelsk .era-year{color:#80aadd;}.era-engelsk .era-title{color:#a0c8f0;}
+  .era:nth-child(9){animation-delay:1.8s}.era:nth-child(10){animation-delay:2s}.era:nth-child(11){animation-delay:2.2s}
 
   /* RUNE + LEGEND */
   .rune-strip{text-align:center;margin:40px 0;color:rgba(201,150,42,.22);font-size:1.6rem;letter-spacing:.4em;animation:fadeIn 2s ease both;animation-delay:2s;}
@@ -149,7 +153,7 @@
   <div class="header">
     <div class="ornament">&#x2E3B; &#x16B1; &#x16B2; &#x16BE; &#x2E3B;</div>
     <h1>Norsk Spr&aring;khistorie</h1>
-    <p class="subtitle">Fra runer til riksm&aring;l og nynorsk</p>
+    <p class="subtitle">Fra runer til bokmål, nynorsk, samisk og engelskpåvirkning</p>
     <div class="ornament">&#x2E3B; &#x2726; &#x2E3B;</div>
     <div class="hints">
       <span class="hint">&#9655; Klikk et kort for utdypende forklaring</span>
@@ -493,11 +497,147 @@
                 <div class="expand-label">Dialektenes stilling</div>
                 <div class="expand-text">Norge er unikt i Europa: <span class="g" data-g="dialekt">dialekter</span> brukes aktivt i TV, radio og politikk. Ingen talm&aring;l ble noen gang k&aring;ret til &laquo;standard&raquo;.</div>
               </div>
+              <div class="expand-section">
+                <div class="expand-label">Multietnolekt</div>
+                <div class="expand-text"><span class="g" data-g="multietnolekt">Multietnolekt</span> &mdash; gjerne kalt <em>kebabnorsk</em> i dagligtale &mdash; er en talem&aring;lsvariet som oppsto i flerspråklige bymilj&oslash;er fra 1990-tallet, s&aelig;rlig p&aring; Oslo &oslash;st. Den blander norsk grammatikk med lånord og trekk fra arabisk, urdu, somalisk, tyrkisk og engelsk. Multietnolekt er ikke «ødelagt norsk» &mdash; det er et regelrett, systematisk talem&aring;l med egne normer, godt dokumentert av norske spr&aring;kforskere som Unn R&oslash;yneland. Det viser at norsk, som alltid, fortsetter &aring; forme seg etter menneskene som bruker det.</div>
+              </div>
             </div>
           </div>
           <div class="expand-big-quote">Norsk finnes ikkje i &eacute;in form &mdash; norsk er alle formene til saman</div>
           <div class="expand-facts">
-            <span class="fact-pill">Navnebytte 1929</span><span class="fact-pill">Samnorsk-reform 1938 &amp; 1959</span><span class="fact-pill">500 000 mot samnorsk</span><span class="fact-pill">~15% nynorskbrukere i dag</span><span class="fact-pill">M&aring;lloven sikrer likestilling</span>
+            <span class="fact-pill">Navnebytte 1929</span><span class="fact-pill">Samnorsk-reform 1938 &amp; 1959</span><span class="fact-pill">500 000 mot samnorsk</span><span class="fact-pill">~15% nynorskbrukere i dag</span><span class="fact-pill">M&aring;lloven sikrer likestilling</span><span class="fact-pill">Multietnolekt fra 1990-tallet</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9 SAMISK -->
+    <div class="era era-samisk" data-id="samisk">
+      <div class="era-left">
+        <div class="card" onclick="toggle('samisk','left')">
+          <div class="era-year">SIDEN TIDENES MORGEN</div>
+          <div class="era-title">Samisk — Norges eldste språk</div>
+          <div class="era-desc"><span class="g" data-g="samisk">Samisk</span> er ikke en del av den nordiske språkfamilien, men har eksistert i Norge langt lenger enn norrønt. Tre varianter snakkes i Norge i dag.</div>
+          <div class="era-quote">«Sámegiel lea mi siida» — Språket er vårt folk</div>
+        </div>
+      </div>
+      <div class="era-center"><div class="era-dot"></div></div>
+      <div class="era-right"></div>
+      <div class="expand-panel" id="panel-samisk">
+        <div class="expand-inner">
+          <div class="expand-columns">
+            <div>
+              <div class="expand-section">
+                <div class="expand-label">Et eget språktre</div>
+                <div class="expand-text"><span class="g" data-g="samisk">Samisk</span> tilhører den <span class="g" data-g="uraloaltaisk">uralske språkfamilien</span> — i slekt med finsk og ungarsk, ikke med norsk. Det har vært talt på Nordkalotten i minst <strong>5 000 år</strong> og er dermed det språket med lengst kontinuerlig tilstedeværelse på norsk territorium.</div>
+              </div>
+              <div class="expand-section">
+                <div class="expand-label">Varianter i Norge</div>
+                <div class="expand-text">I Norge snakkes i dag <strong>nordsamisk</strong> (mest utbredt, ca. 15 000–20 000 talere), <strong>lulesamisk</strong> og <strong>sørsamisk</strong>. Nordsamisk har offisiell status i flere kommuner og brukes i NRK Sápmi og i skolen.</div>
+              </div>
+            </div>
+            <div>
+              <div class="expand-section">
+                <div class="expand-label">Fornorskingspolitikken</div>
+                <div class="expand-text">Fra ca. 1850 til 1960-tallet førte den norske staten en systematisk <span class="g" data-g="fornorsking">fornorskingspolitikk</span>: samisk ble forbudt i skoler, samiske barn ble sendt på internatskoler, og bruken av samisk ble aktivt motarbeidet. Politikken satte dype spor som varer den dag i dag.</div>
+              </div>
+              <div class="expand-section">
+                <div class="expand-label">Revitalisering og rettigheter</div>
+                <div class="expand-text"><span class="g" data-g="sametinget">Sametinget</span> ble opprettet i 1989. Samisk fikk offisiell status i Norge med <strong>sameloven</strong> (1987). I dag er nordsamisk offisielt forvaltningsspråk i en rekke kommuner. Det pågår et aktivt <span class="g" data-g="revitalisering">revitaliseringsarbeid</span>, men mange av de minste samiske språkene er truet.</div>
+              </div>
+            </div>
+          </div>
+          <div class="expand-big-quote">Samisk er ikke et «fremmedspråk» i Norge — det er dette landets eldste levende språk</div>
+          <div class="expand-facts">
+            <span class="fact-pill">Uralsk språkfamilie</span><span class="fact-pill">~5 000 år på Nordkalotten</span><span class="fact-pill">3 varianter i Norge</span><span class="fact-pill">Fornorsking ca. 1850–1960</span><span class="fact-pill">Sametinget opprettet 1989</span><span class="fact-pill">NRK Sápmi siden 2001</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10 MINORITETSSPRÅK -->
+    <div class="era era-minoritet" data-id="minoritet">
+      <div class="era-left"></div>
+      <div class="era-center"><div class="era-dot"></div></div>
+      <div class="era-right">
+        <div class="card" onclick="toggle('minoritet','right')">
+          <div class="era-year">HISTORISK — I DAG</div>
+          <div class="era-title">Kvensk, romani og romanes</div>
+          <div class="era-desc">Tre <span class="g" data-g="nasjonaleminoritetssprak">nasjonale minoritetsspråk</span> med dype røtter i Norge — lenge undertrykt, nå anerkjent og under revitalisering.</div>
+          <div class="era-quote">«Ikkje eit tungemål — men mange»</div>
+        </div>
+      </div>
+      <div class="expand-panel" id="panel-minoritet">
+        <div class="expand-inner">
+          <div class="expand-columns">
+            <div>
+              <div class="expand-section">
+                <div class="expand-label">Kvensk</div>
+                <div class="expand-text"><span class="g" data-g="kvensk">Kvensk</span> er et finsk-ugrisk språk i slekt med finsk og meänkieli, talt av <strong>kvenene</strong> i Troms og Finnmark. Kvenene er etterkommere av innvandrere fra Finland og Nord-Sverige fra middelalderen og fremover. Kvensk ble anerkjent som eget språk (ikke dialekt av finsk) i <strong>2005</strong>. I dag er det anslagsvis 2 000–8 000 talere igjen.</div>
+              </div>
+              <div class="expand-section">
+                <div class="expand-label">Romani (taternes språk)</div>
+                <div class="expand-text"><span class="g" data-g="romani">Romani</span> er språket til <strong>romanifolket</strong> (taterne/reisende), som kom til Skandinavia på 1500-tallet. Det er et indoarisk språk med røtter i Nord-India, sterkt blandet med norsk og dansk. Den norske staten gjennomførte grove overgrep mot romanifolket på 1900-tallet, inkludert <span class="g" data-g="tvangssterilisering">tvangssterilisering</span> og barnehjemspolitikk som nesten utslettet språket.</div>
+              </div>
+            </div>
+            <div>
+              <div class="expand-section">
+                <div class="expand-label">Romanes (sigøynernes språk)</div>
+                <div class="expand-text"><span class="g" data-g="romanes">Romanes</span> er språket til <strong>romani-folket</strong> (sigøynere/rom), som er en annen gruppe enn romanifolket. Også et indoarisk språk med indisk opphav. Romfolket i Norge ble hardt rammet av nazistisk forfølgelse under andre verdenskrig. Romanes er i dag svært truet i Norge.</div>
+              </div>
+              <div class="expand-section">
+                <div class="expand-label">Anerkjennelse og status</div>
+                <div class="expand-text">Norge ratifiserte <span class="g" data-g="minoritetssprakpakten">Europarådets minoritetsspråkpakt</span> i 1993. Kvensk, romani og romanes er alle anerkjent som <strong>nasjonale minoritetsspråk</strong>. Det pågår revitaliseringsarbeid, men alle tre er truet — særlig romanes og romani, der svært få unge bruker språket aktivt.</div>
+              </div>
+            </div>
+          </div>
+          <div class="expand-big-quote">Norsk språkhistorie er ikke bare majoritetens historie — den er også historien om dem som ble fortiet</div>
+          <div class="expand-facts">
+            <span class="fact-pill">Kvensk: anerkjent 2005</span><span class="fact-pill">Romani: indoarisk opphav</span><span class="fact-pill">Romanes: truet i dag</span><span class="fact-pill">Minoritetsspråkpakten 1993</span><span class="fact-pill">Fornorsking rammet alle tre</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11 ENGELSK -->
+    <div class="era era-engelsk" data-id="engelsk">
+      <div class="era-left">
+        <div class="card" onclick="toggle('engelsk','left')">
+          <div class="era-year">1900-TALL — I DAG</div>
+          <div class="era-title">Engelsk påvirkning</div>
+          <div class="era-desc"><span class="g" data-g="anglisismer">Anglisismer</span> strømmer inn via film, musikk, internett og næringsliv. Norsk er i dag Europas mest engelskpåvirkede språk utenfor de britiske øyer.</div>
+          <div class="era-quote">«Ok, whatever — det er jo bare et ord»</div>
+        </div>
+      </div>
+      <div class="era-center"><div class="era-dot"></div></div>
+      <div class="era-right"></div>
+      <div class="expand-panel" id="panel-engelsk">
+        <div class="expand-inner">
+          <div class="expand-columns">
+            <div>
+              <div class="expand-section">
+                <div class="expand-label">Historisk bakgrunn</div>
+                <div class="expand-text">Engelsk påvirkning startet for alvor med <strong>industrialisering og sjøfart</strong> på 1800-tallet — mange engelske tekniske termer ble lånt inn. Men den store bølgen kom etter andre verdenskrig med amerikansk film, musikk og siden internett. I dag er engelsk det nest mest brukte språket i Norge.</div>
+              </div>
+              <div class="expand-section">
+                <div class="expand-label">Anglisismer i norsk</div>
+                <div class="expand-text">Norsk har absorbert tusenvis av engelske ord — <span class="g" data-g="anglisismer">anglisismer</span>. Noen tilpasses norsk grammatikk (<em>å google</em>, <em>å chille</em>, <em>å streame</em>), andre brukes uendret. Ungdomsspråket er særlig påvirket. Ord som <em>nice</em>, <em>fake</em>, <em>skills</em> og <em>vibe</em> brukes daglig av unge nordmenn.</div>
+              </div>
+            </div>
+            <div>
+              <div class="expand-section">
+                <div class="expand-label">Domenetap</div>
+                <div class="expand-text">Språkforskere advarer mot <span class="g" data-g="domenetap">domenetap</span>: at norsk mister bruksdomener til engelsk. Innen <strong>akademia, teknologi og næringsliv</strong> skjer mye kommunikasjon på engelsk. Mange universiteter tilbyr nå studier utelukkende på engelsk, og store norske selskaper har gjort engelsk til internt arbeidsspråk.</div>
+              </div>
+              <div class="expand-section">
+                <div class="expand-label">Norsk i dag</div>
+                <div class="expand-text"><span class="g" data-g="sprakradet">Språkrådet</span> arbeider aktivt for å lage norske alternativer til engelske lånord og bevare norsk som fullverdig <span class="g" data-g="samfunnsbærende">samfunnsbærende språk</span>. Samtidig er engelskkompetanse svært høy i Norge — noe som gjør nordmenn til aktive brukere av to språk side om side.</div>
+              </div>
+            </div>
+          </div>
+          <div class="expand-big-quote">Norsk er ikke truet av engelsk — men norsk må aktivt velges for å overleve som hverdagsspråk</div>
+          <div class="expand-facts">
+            <span class="fact-pill">Engelsk i skolen siden 1959</span><span class="fact-pill">~80% av nordmenn snakker engelsk</span><span class="fact-pill">Domenetap i akademia</span><span class="fact-pill">Språkrådet: norske alternativer</span><span class="fact-pill">«Norsk i 100» – språkmelding 2008</span>
           </div>
         </div>
       </div>
@@ -516,6 +656,9 @@
       <div class="legend-item"><div class="legend-dot" style="border-color:#c06060;"></div>Dansk-norsk</div>
       <div class="legend-item"><div class="legend-dot" style="border-color:#70b070;"></div>Nasjonal periode</div>
       <div class="legend-item"><div class="legend-dot" style="border-color:#c9962a;"></div>Moderne norsk</div>
+      <div class="legend-item"><div class="legend-dot" style="border-color:#5a8a7a;"></div>Samisk</div>
+      <div class="legend-item"><div class="legend-dot" style="border-color:#7a5a8a;"></div>Minoritetsspr&aring;k</div>
+      <div class="legend-item"><div class="legend-dot" style="border-color:#4a6a9a;"></div>Engelsk p&aring;virkning</div>
     </div>
   </div>
   <!-- ── OPPGAVER ── -->
@@ -593,6 +736,33 @@
         </div>
         <div class="q-answer">Hansaforbundets tyske kjøpmenn dominerte fiskehandelen i Bergen i over 300 år. Deres <strong>middelnedertyske</strong> språk påvirket norsk kraftig — hundrevis av hverdagsord ble lånt inn, særlig innen handel, håndverk og sjøfart. Ord som «handel», «betale», «arbeide» og «herlig» stammer herfra.</div>
       </div>
+
+      <div class="q-item" onclick="toggleQ(this)">
+        <div class="q-question">
+          <span class="q-num">8</span>
+          <span>Hvilken språkfamilie tilhører samisk, og hva skiller det fra norsk?</span>
+          <span class="q-arrow">▸</span>
+        </div>
+        <div class="q-answer">Samisk tilhører den <strong>uralske (finsk-ugriske) språkfamilien</strong> — i slekt med finsk og ungarsk, ikke med norsk. Norsk er et indoeuropeisk, germansk språk. Samisk har en helt annen grammatikk og ordforråd, og har vært talt på Nordkalotten i minst 5 000 år — lenger enn norrønt har eksistert. I Norge snakkes nordsamisk, lulesamisk og sørsamisk.</div>
+      </div>
+
+      <div class="q-item" onclick="toggleQ(this)">
+        <div class="q-question">
+          <span class="q-num">9</span>
+          <span>Hva er kvensk, romani og romanes, og hva har disse tre språkene til felles i norsk historie?</span>
+          <span class="q-arrow">▸</span>
+        </div>
+        <div class="q-answer"><strong>Kvensk</strong> er et finsk-ugrisk språk talt av kvenene i Nord-Norge. <strong>Romani</strong> er språket til romanifolket (taterne), og <strong>romanes</strong> er språket til romani-folket (rom/sigøynere) — begge indoariske språk med røtter i India. Alle tre er anerkjent som nasjonale minoritetsspråk i Norge. Felles for alle tre er at de ble aktivt undertrykt av norske myndigheter gjennom fornorskingspolitikk, og at de i dag er truet med utdøing.</div>
+      </div>
+
+      <div class="q-item" onclick="toggleQ(this)">
+        <div class="q-question">
+          <span class="q-num">10</span>
+          <span>Hva menes med «domenetap», og hvorfor er det relevant for norsk i dag?</span>
+          <span class="q-arrow">▸</span>
+        </div>
+        <div class="q-answer"><strong>Domenetap</strong> skjer når et språk gradvis mister bruksområder til et annet språk. For norsk er det særlig bekymringsfullt innen akademia, teknologi og næringsliv, der engelsk i stadig større grad overtar. Mange universiteter tilbyr nå studier kun på engelsk, og store norske selskaper har gjort engelsk til internt arbeidsspråk. Språkrådet arbeider aktivt for å lage norske alternativ til engelske lånord og bevare norsk som et fullverdig samfunnsbærende språk.</div>
+      </div>
     </div>
 
     <!-- REFLEKSJONSOPPGAVER -->
@@ -667,6 +837,40 @@
           </ul>
         </div>
       </div>
+
+      <div class="q-item q-reflect" onclick="toggleQ(this)">
+        <div class="q-question">
+          <span class="q-num" style="border-color:rgba(112,176,112,0.4);color:#80c080;">R5</span>
+          <span>Den norske staten undertrykte samisk, kvensk og romani i over hundre år. Hva slags ansvar har et samfunn overfor språk det selv har skadet — og er revitalisering mulig?</span>
+          <span class="q-arrow">▸</span>
+        </div>
+        <div class="q-answer q-reflect-answer">
+          <div class="q-reflect-prompt">Mulige innfallsvinkler:</div>
+          <ul>
+            <li><strong>Historisk ansvar:</strong> Staten ba offisielt om unnskyldning til samene (1997) og romanifolket (1998). Hva betyr en unnskyldning i praksis?</li>
+            <li><strong>Revitalisering:</strong> Nordsamisk har hatt en viss suksess — NRK Sápmi, samiske barnehager, offisiell status i kommuner. Romani og romanes er langt mer truet fordi bærerne er spredt og fraværet av skriftspråklig tradisjon er dypere.</li>
+            <li><strong>Språk og identitet:</strong> Kan man ha en kulturell identitet uten å snakke forfedrespråket? Hva mister et folk når et språk dør?</li>
+            <li><strong>Ressursspørsmål:</strong> Hvem skal finansiere revitalisering, og er det realistisk å «redde» alle truede språk?</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="q-item q-reflect" onclick="toggleQ(this)">
+        <div class="q-question">
+          <span class="q-num" style="border-color:rgba(112,176,112,0.4);color:#80c080;">R6</span>
+          <span>Engelsk er i dag det nest mest brukte språket i Norge. Er dette en trussel mot norsk, eller er tospråklighet en ressurs?</span>
+          <span class="q-arrow">▸</span>
+        </div>
+        <div class="q-answer q-reflect-answer">
+          <div class="q-reflect-prompt">Mulige innfallsvinkler:</div>
+          <ul>
+            <li><strong>Domenetap:</strong> Når engelsk overtar i akademia og næringsliv, reduseres norskens bruksverdi. Kan dette på lang sikt undergrave norsk som fullverdig samfunnsspråk?</li>
+            <li><strong>Ressurs:</strong> Høy engelskbeherskelse gjør norske arbeidere og studenter konkurransedyktige internasjonalt. Er dette en fordel som oppveier risikoen?</li>
+            <li><strong>Historisk parallell:</strong> Norsk overlevde 400 år med dansk som riksspråk. Er engelsk-situasjonen fundamentalt annerledes — og i så fall, hvorfor?</li>
+            <li><strong>Ungdomsspråk:</strong> Er anglisismer i ungdomsspråket et symptom på domenetap, eller er det bare naturlig språklig lån, slik norsk alltid har lånt fra andre språk?</li>
+          </ul>
+        </div>
+      </div>
     </div>
 
     <!-- DISCLAIMER -->
@@ -720,7 +924,23 @@ const GLOSSARY = {
   bokmål:{term:"Bokmål",def:"Norges dominerende skriftspråk, brukt av ca. 85–90 % av befolkningen. Utviklet fra det dansk-norske skriftspråket. Fikk navnet «bokmål» i 1929. Finnes i konservativ (<em>riksmål</em>) og mer radikal variant."},
   nynorsk:{term:"Nynorsk",def:"Norges andre offisielle skriftspråk, brukt av ca. 10–15 %. Bygger på norske dialekter, konstruert av Ivar Aasen på 1850-tallet som landsmål. Omdøpt til nynorsk i 1929. Sterkest på Vestlandet og i Fjord-Norge."},
   samnorsk:{term:"Samnorsk",def:"Politisk prosjekt (ca. 1930–1970) der staten ønsket å smelte bokmål og nynorsk til ett felles norsk skriftspråk. Rettskrivningsreformene av 1938 og 1959 nærmet språkene hverandre, men massiv folkemotstand gravla prosjektet."},
-  mållov:{term:"Målloven",def:"Norsk lov (gjeldende fra 1930, revidert 2021) som regulerer bruken av bokmål og nynorsk i offentlig forvaltning. Statlige organer skal bruke begge skriftspråk, og borgere har rett til svar på sin målform."}
+  mållov:{term:"Målloven",def:"Norsk lov (gjeldende fra 1930, revidert 2021) som regulerer bruken av bokmål og nynorsk i offentlig forvaltning. Statlige organer skal bruke begge skriftspråk, og borgere har rett til svar på sin målform."},
+  multietnolekt:{term:"Multietnolekt",def:"En talemålsvarietet som oppstår i flerspråklige bymiljøer der talere med ulik språklig bakgrunn møtes. I Norge kjent som «kebabnorsk» — norsk grammatikk blandet med lånord fra arabisk, urdu, somalisk, tyrkisk og engelsk. Ikke «feil norsk», men et eget, systematisk talemål med sine egne normer. Først dokumentert i Oslo øst på 1990-tallet."},
+  samisk:{term:"Samisk",def:"Språkgruppe i den uralske (finsk-ugriske) familien, ikke beslektet med norsk. Talt av samene på Nordkalotten i minst 5 000 år. I Norge snakkes nordsamisk, lulesamisk og sørsamisk. Nordsamisk er offisielt forvaltningsspråk i en rekke norske kommuner."},
+  uraloaltaisk:{term:"Uralsk språkfamilie",def:"Språkfamilie som inkluderer finsk, estisk, ungarsk og samisk — men ikke norsk eller andre germanske språk. Karakteriseres av agglutinerende grammatikk der mange endelser knyttes til ordstammen. Helt ulik den indoeuropeiske familien som norsk tilhører."},
+  fornorsking:{term:"Fornorskingspolitikk",def:"Statlig politikk (ca. 1850–1960) som aktivt forsøkte å erstatte samisk, kvensk og romani med norsk. Inkluderte forbud mot samisk i skolen, tvangsplassering av barn på internatskoler, og systematisk undertrykking av minoritetskultur. Staten Norge ba offisielt om unnskyldning i 1997."},
+  sametinget:{term:"Sametinget",def:"Det samiske folkets folkevalgte organ i Norge, opprettet i 1989 og med sete i Karasjok. Behandler saker av særlig betydning for den samiske befolkningen. Samisk er det offisielle språket i Sametinget."},
+  revitalisering:{term:"Revitalisering",def:"Prosessen med å gjenopplive et truet eller nesten utdødd språk — gjennom undervisning, medietilbud, kulturarbeid og bevisst bruk. Har hatt begrenset suksess for samisk, men er mer krevende for romani og romanes."},
+  nasjonaleminoritetssprak:{term:"Nasjonale minoritetsspråk",def:"Språk som tilhører grupper med langvarig tilknytning til et land, og som er anerkjent etter internasjonale avtaler. I Norge er kvensk, romani og romanes (i tillegg til samisk) anerkjent som nasjonale minoritetsspråk etter Europarådets pakt."},
+  kvensk:{term:"Kvensk",def:"Finsk-ugrisk språk talt av kvenene i Troms og Finnmark, i slekt med finsk og meänkieli. Anerkjent som eget språk (ikke dialekt) i 2005. Anslagsvis 2 000–8 000 talere igjen i Norge etter tiår med fornorskingspolitikk."},
+  romani:{term:"Romani (taternes språk)",def:"Indoarisk språk med røtter i Nord-India, talt av romanifolket (taterne/reisende) i Norge. Kom til Skandinavia på 1500-tallet og er sterkt blandet med norsk og dansk. Nesten utryddet etter statlig assimilasjons- og steriliseringspolitikk på 1900-tallet."},
+  romanes:{term:"Romanes",def:"Indoarisk språk talt av romani-folket (rom/sigøynere) — en annen gruppe enn det norske romanifolket. Roten i indiske språk, ført til Europa fra middelalderen. Svært truet i Norge i dag."},
+  tvangssterilisering:{term:"Tvangssterilisering",def:"Den norske staten gjennomførte tvangssterilisering av romanifolket og andre grupper fra 1930- til 1970-tallet under eugenikklover. Tusenvis ble rammet. Staten ba om unnskyldning i 1998 og opprettet en erstatningsordning."},
+  minoritetssprakpakten:{term:"Europarådets minoritetsspråkpakt",def:"Internasjonal avtale (1992) som forplikter stater til å beskytte og fremme regionale og minoritetsspråk. Norge ratifiserte pakten i 1993. Kvensk, romani og romanes er beskyttet under pakten i Norge."},
+  anglisismer:{term:"Anglisismer",def:"Ord, uttrykk eller konstruksjoner lånt fra engelsk inn i et annet språk. Norsk har absorbert tusenvis av engelske ord, særlig etter 1945. Noen tilpasses norsk grammatikk (å google, å chille), andre brukes direkte (nice, fake, cool)."},
+  domenetap:{term:"Domenetap",def:"Når et språk gradvis mister bruksområder (domener) til et annet språk. I Norge skjer dette særlig innen akademia, teknologi og næringsliv, der engelsk i stadig større grad erstatter norsk. Språkforskere ser dette som en langsiktig trussel mot norsk som fullverdig samfunnsspråk."},
+  sprakradet:{term:"Språkrådet",def:"Statlig faginstans for norsk språk, opprettet i 2004. Arbeider for å bevare og styrke norsk (bokmål og nynorsk), lager norske alternativer til engelske lånord, og gir råd til myndigheter og offentlighet om språkbruk."},
+  samfunnsbærende:{term:"Samfunnsbærende språk",def:"Et språk som dekker alle funksjoner i et samfunn — forvaltning, juss, vitenskap, kunst, hverdagsliv. Norsk regnes som et samfunnsbærende språk, men domenetap til engelsk utfordrer denne statusen innen visse sektorer."}
 };
 
 // Panel toggle
